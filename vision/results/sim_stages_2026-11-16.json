@@ -1,0 +1,74 @@
+{
+ "embedder": "dinov2-small + trained head",
+ "targets": {
+  "held_top1": 0.9,
+  "held_top1_barcode": 0.98,
+  "shelf_top1": 0.8,
+  "tag_read": 0.95,
+  "wrong_rate": 0.02,
+  "latency_ms": 300,
+  "detector_map50": 0.85
+ },
+ "accept": {
+  "min_sim": 0.57,
+  "min_margin": 0.01
+ },
+ "shelf": {
+  "crops": 1594,
+  "top1": 0.972396486825596,
+  "top5": 0.9968632371392723,
+  "top1_new_skus": 0.9490196078431372,
+  "new_sku_crops": 255
+ },
+ "held": {
+  "items": 100,
+  "top1": 0.56,
+  "wrong_rate": 0.05,
+  "asked_to_turn_rate": 0.39,
+  "barcode_read_rate": 0.11,
+  "top1_when_barcode_read": 1.0,
+  "by_view": {
+   "front": {
+    "items": 38,
+    "top1": 0.6052631578947368
+   },
+   "side": {
+    "items": 16,
+    "top1": 0.5
+   },
+   "back": {
+    "items": 20,
+    "top1": 0.55
+   },
+   "scan": {
+    "items": 16,
+    "top1": 0.5
+   },
+   "angled": {
+    "items": 10,
+    "top1": 0.6
+   }
+  }
+ },
+ "tags": {
+  "tags": 429,
+  "min_height_px": 22,
+  "price_read": 0.8508158508158508,
+  "price_misread": 0.037296037296037296,
+  "promo_flag": 1.0,
+  "by_height": {
+   "22-29px": {
+    "tags": 204,
+    "price_read": 0.7352941176470589
+   },
+   "30-44px": {
+    "tags": 193,
+    "price_read": 0.9533678756476683
+   },
+   "45px+": {
+    "tags": 32,
+    "price_read": 0.96875
+   }
+  }
+ }
+}

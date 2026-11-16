@@ -1,0 +1,11 @@
+# local Python environment and Node packages
+.venv/
+node_modules/
+package-lock.json
+package.json
+# generated simulator datasets, model weights and run outputs (large; regenerate with the scripts)
+data/
+runs/
+*.pth
+*.onnx
+__pycache__/

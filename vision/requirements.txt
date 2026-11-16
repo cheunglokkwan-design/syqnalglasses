@@ -1,0 +1,9 @@
+# AisleLens vision pipeline. PyTorch is not pinned here: install the CPU or CUDA build
+# that fits the machine from https://pytorch.org first, then:  pip install -r vision/requirements.txt
+rfdetr[train]>=1.12   # detector (Apache-2.0); [train] adds Lightning and COCO eval
+transformers>=4.40    # DINOv2 embedder (Apache-2.0 weights: facebook/dinov2-small)
+rapidocr-onnxruntime>=1.4   # PaddleOCR models via ONNX Runtime (Apache-2.0)
+zxing-cpp>=2.2        # EAN-13 barcodes (Apache-2.0)
+numpy
+pillow
+# optional, for a real camera: pyrealsense2 opencv-python

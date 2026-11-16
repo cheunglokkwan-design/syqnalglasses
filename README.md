@@ -2,7 +2,7 @@
 
 Smart glasses grocery shopping assistant. You look at a product, and the glasses give a short verdict: whether it is a good buy here, whether it is cheaper elsewhere, and whether it fits your diet. The glasses stay thin, the phone does the logic, and the cloud holds the catalogue and prices.
 
-This repository holds the planning documents and prototypes. No app code has been written yet.
+This repository holds the planning documents, the store simulators, and the first vision pipeline (detect, identify, read the price tag, give the verdict). The phone app is not written yet. Current status and next steps: [docs/handover.md](docs/handover.md).
 
 ## Contents
 
@@ -12,6 +12,8 @@ This repository holds the planning documents and prototypes. No app code has bee
 | [docs/vision-model-report.md](docs/vision-model-report.md) | Vision model choice: RF-DETR detector, DINOv2/v3 embedding search for exact SKU, PaddleOCR for price tags, datasets, RealSense test plan, ripeness and freshness check |
 | [docs/store-simulator-research.md](docs/store-simulator-research.md) | Survey of open-source store simulators (Sari Sandbox, MarketGen, RoboBenchMart, Isaac Sim) and why we built our own 3D store |
 | [prototypes/store-sim-3d/](prototypes/store-sim-3d/) | AisleLens Store 3D: first-person supermarket you walk and pick products in, with RealSense-style RGB-D frames and exact product labels, plus a headless dataset generator |
+| [vision/](vision/) | Vision pipeline: RF-DETR detector, DINOv2 product matching, barcode and price-tag reading, shopping verdict; training and scoring scripts; a local server the 3D store and a RealSense camera talk to |
+| [docs/handover.md](docs/handover.md) | Where the work stands and what to do next |
 | [prototypes/aislelens-2d-simulator.html](prototypes/aislelens-2d-simulator.html) | AisleLens 2D store simulator. Open it in any browser to walk the scan, compare and verdict loop in a fictional store |
 
 The docs are Markdown exports of living documents. The diagrams in them are only in the live versions:

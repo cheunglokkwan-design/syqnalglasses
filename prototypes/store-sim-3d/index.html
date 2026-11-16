@@ -70,6 +70,12 @@ select{width:100%;background:var(--ink);color:var(--text);border:1px solid var(-
 #loading{font:12px var(--mono);color:var(--mute)}
 #toast{left:50%;top:calc(18px + env(safe-area-inset-top,0px));transform:translateX(-50%);background:var(--panel);border:1px solid var(--line);padding:7px 12px;font-size:12.5px;opacity:0;transition:opacity .25s;max-width:min(520px,90vw);text-align:center}
 #toast.show{opacity:1}
+#lens{left:50%;bottom:calc(58px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--panel);border:1px solid var(--line);padding:10px 14px;width:min(460px,92vw);display:grid;gap:4px;font-size:13px}
+#lens .h{font:600 15px var(--ui);text-wrap:balance}
+#lens .al{color:#ff8a80;font-weight:600}
+#lens .l{color:var(--mute);line-height:1.4}
+#lens .t{font:11px var(--mono);color:var(--mute)}
+#lens .ok{color:#7bd88f}#lens .no{color:#ff8a80}
 #inset-label{font:600 10px var(--mono);letter-spacing:.1em;color:var(--text);background:var(--panel);padding:2px 6px}
 #joy{position:fixed;z-index:6;left:calc(24px + env(safe-area-inset-left,0px));bottom:calc(24px + env(safe-area-inset-bottom,0px));width:110px;height:110px;border-radius:50%;border:1px solid var(--line);background:rgba(13,18,16,.35);display:none}
 #joy i{position:absolute;left:35px;top:35px;width:40px;height:40px;border-radius:50%;background:rgba(233,239,233,.35)}
@@ -88,8 +94,9 @@ select{width:100%;background:var(--ink);color:var(--text);border:1px solid var(-
 <div class="hud" id="topbar"><span class="rec" id="recdot"></span><b>AisleLens Store 3D</b><span id="poseRead">x 0.00 z 0.00</span><span id="fps"></span></div>
 <div class="hud" id="reticle"></div>
 <div class="hud" id="target" hidden></div>
-<div class="hud" id="hint"><kbd>WASD</kbd> walk <kbd>Shift</kbd> run <kbd>C</kbd> crouch <kbd>Click</kbd> pick / put back <kbd>B</kbd> to basket <kbd>Wheel</kbd> turn item <kbd>P</kbd> capture <kbd>1-4</kbd> view <kbd>Esc</kbd> cursor</div>
+<div class="hud" id="hint"><kbd>WASD</kbd> walk <kbd>Shift</kbd> run <kbd>C</kbd> crouch <kbd>Click</kbd> pick / put back <kbd>B</kbd> to basket <kbd>Wheel</kbd> turn item <kbd>V</kbd> ask AisleLens <kbd>P</kbd> capture <kbd>1-4</kbd> view <kbd>Esc</kbd> cursor</div>
 <div class="hud" id="toast"></div>
+<div class="hud" id="lens" hidden aria-live="polite"></div>
 <div id="joy"><i></i></div>
 
 <aside id="panel">
@@ -114,6 +121,13 @@ select{width:100%;background:var(--ink);color:var(--text);border:1px solid var(-
     <h2><span>Basket</span><span id="bcount">0 items</span></h2>
     <ul id="basket"></ul>
     <div class="total"><span>Total</span><span id="btotal">RM 0.00</span></div>
+  </section>
+  <section>
+    <h2><span>Vision model</span><span id="vstat">not checked</span></h2>
+    <div class="btns">
+      <button class="btn primary" id="askv">Ask AisleLens (V)</button>
+    </div>
+    <div class="mono" id="vinfo">Sends this camera frame (RGB + depth) to the vision server on your computer: <code>python vision/serve.py</code></div>
   </section>
   <section>
     <h2><span>Dataset</span><span id="fcount">0 frames</span></h2>
@@ -521,12 +535,15 @@ const stockGroup=new THREE.Group();scene.add(stockGroup);
 const ASSETS={};SKUS.forEach(s=>{});
 let productMeshes=[];let instInfo={}; // instInfo[skuId][inst] = {pos}
 let tagMesh=null;
+const TAG_SEG=255; // label-pass class id for shelf-edge price tags
+let tagList=[];   // tagList[i] = {sku, promo} for tag instance i
+const isPromo=s=>s.id%7===0;
 const TAG_COLS=8,TAG_ROWS=8,TAG_W=256,TAG_H=128;
 let tagAtlas=null,tagSlots={};
 function buildTagAtlas(){
   const cv=mkCanvas(TAG_COLS*TAG_W,TAG_ROWS*TAG_H),ctx=cv.getContext('2d');
   SKUS.forEach((s,i)=>{const cx=(i%TAG_COLS)*TAG_W,cy=Math.floor(i/TAG_COLS)*TAG_H;
-    const promo=s.id%7===0;
+    const promo=isPromo(s);
     ctx.fillStyle=promo?'#e53935':'#ffd54f';ctx.fillRect(cx,cy,TAG_W,TAG_H);
     ctx.fillStyle=promo?'#fff':'#1b1b1b';ctx.textBaseline='top';ctx.textAlign='left';
     ctx.font='600 17px "IBM Plex Sans",sans-serif';ctx.fillText((s.brand+' '+s.name).slice(0,26),cx+8,cy+6);
@@ -599,9 +616,11 @@ function stock(seed){
     im.userData.sku=s;im.computeBoundingSphere();tagSeg(im,s.seg);
     stockGroup.add(im);productMeshes.push(im)});
   // shelf tags merged into one mesh using the atlas
-  const pos=[],uv=[],idx=[];let vi=0;
+  const pos=[],uv=[],idx=[],tid=[];let vi=0;
   const TW=0.075,TH=0.037;
-  for(const t of tags){
+  tagList=tags.map(t=>({sku:t.sku,promo:isPromo(t.sku)}));
+  for(const [ti,t] of tags.entries()){
+    tid.push(ti+1,ti+1,ti+1,ti+1);
     const sl=tagSlots[t.sku.id];
     let corners;
     if(t.crate){const x=t.crate.x-0.56,y=t.crate.y+0.08,z=t.crate.z;const w=0.2,h=0.1;corners=[[x-0.01,y,z-w/2],[x-0.01,y,z+w/2],[x-0.01,y+h,z+w/2],[x-0.01,y+h,z-w/2]]}
@@ -617,24 +636,27 @@ function stock(seed){
     uv.push(sl[0],sl[1],sl[0]+sl[2],sl[1],sl[0]+sl[2],sl[1]+sl[3],sl[0],sl[1]+sl[3]);
     idx.push(vi,vi+1,vi+2,vi,vi+2,vi+3);vi+=4;
   }
-  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.setAttribute('aTag',new THREE.Float32BufferAttribute(tid,1));g.setIndex(idx);g.computeVertexNormals();
   tagMesh=new THREE.Mesh(g,new THREE.MeshStandardMaterial({map:tagAtlas,roughness:0.5,side:THREE.DoubleSide}));stockGroup.add(tagMesh);
+  tagSeg(tagMesh,TAG_SEG);
   tagAll();
+  dropHeld();
   basket.length=0;held=null;renderBasket();
 }
 
 /* ---------------- sensor (depth + instance labels) pass ---------------- */
 const sensorMat=new THREE.ShaderMaterial({
   glslVersion:THREE.GLSL3,side:THREE.DoubleSide,
-  uniforms:{uSeg:{value:0}},
-  vertexShader:`uniform float uSeg;
+  uniforms:{uSeg:{value:0},uIsTag:{value:0}},
+  // aTag = price tag index + 1 on the merged tag mesh (uIsTag = 1 only while drawing that mesh)
+  vertexShader:`uniform float uSeg; uniform float uIsTag; in float aTag;
   out float vDepth; flat out float vInst; flat out float vSeg;
   void main(){
     vec4 p=vec4(position,1.0);
     #ifdef USE_INSTANCING
       p=instanceMatrix*p; vInst=float(gl_InstanceID);
     #else
-      vInst=-1.0;
+      vInst=uIsTag>0.5?aTag-1.0:-1.0;
     #endif
     vec4 mv=modelViewMatrix*p; vDepth=-mv.z; vSeg=uSeg;
     gl_Position=projectionMatrix*mv;
@@ -644,7 +666,7 @@ const sensorMat=new THREE.ShaderMaterial({
   layout(location=0) out highp vec4 outC;
   void main(){ outC=vec4(vDepth,vSeg,vInst,1.0); }`
 });
-function tagSeg(mesh,seg){mesh.userData.seg=seg;mesh.userData.segTagged=true;mesh.onBeforeRender=(r,s,c,g,mat)=>{if(mat===sensorMat){sensorMat.uniforms.uSeg.value=seg;sensorMat.uniformsNeedUpdate=true}}}
+function tagSeg(mesh,seg){mesh.userData.seg=seg;mesh.userData.segTagged=true;const isTag=seg===TAG_SEG?1:0;mesh.onBeforeRender=(r,s,c,g,mat)=>{if(mat===sensorMat){sensorMat.uniforms.uSeg.value=seg;sensorMat.uniforms.uIsTag.value=isTag;sensorMat.uniformsNeedUpdate=true}}}
 function tagAll(){scene.traverse(o=>{if(o.isMesh&&!o.userData.segTagged)tagSeg(o,0)})}
 let sensorRT=new THREE.WebGLRenderTarget(4,4,{type:THREE.FloatType,format:THREE.RGBAFormat,minFilter:THREE.NearestFilter,magFilter:THREE.NearestFilter});
 function renderSensor(cam,rt){
@@ -782,7 +804,8 @@ async function capture(opt={}){
   renderer.setPixelRatio(1);renderer.setSize(w,h,false);renderer.render(scene,cam);
   capCanvas.width=w;capCanvas.height=h;const cctx=capCanvas.getContext('2d');cctx.drawImage(renderer.domElement,0,0);
   renderer.setPixelRatio(pr);renderer.setSize(sz.x,sz.y,false);
-  const rgbBlob=await new Promise(r=>capCanvas.toBlob(r,'image/png'));
+  const skip=new Set(opt.skip||[]);
+  const rgbBlob=await new Promise(r=>opt.format==='jpg'?capCanvas.toBlob(r,'image/jpeg',0.9):capCanvas.toBlob(r,'image/png'));
   // depth + labels
   const rt=new THREE.WebGLRenderTarget(w,h,{type:THREE.FloatType,format:THREE.RGBAFormat,minFilter:THREE.NearestFilter,magFilter:THREE.NearestFilter});
   renderSensor(cam,rt);const buf=new Float32Array(w*h*4);renderer.readRenderTargetPixels(rt,0,0,w,h,buf);rt.dispose();
@@ -804,22 +827,28 @@ async function capture(opt={}){
       let ob=objs.get(key);if(!ob){ob={seg,inst,x0:x,y0:y,x1:x,y1:y,n:0,zs:0};objs.set(key,ob)}
       if(x<ob.x0)ob.x0=x;if(x>ob.x1)ob.x1=x;if(y<ob.y0)ob.y0=y;if(y>ob.y1)ob.y1=y;ob.n++;ob.zs+=buf[i]}
     mask.data[mo+3]=255}}
-  capCanvas.width=w;capCanvas.height=h;cctx.putImageData(mask,0,0);
-  const maskBlob=await new Promise(r=>capCanvas.toBlob(r,'image/png'));
-  const depthBlob=await png16(w,h,depth);
+  let maskBlob=null,depthBlob=null;
+  if(!skip.has('mask')){capCanvas.width=w;capCanvas.height=h;cctx.putImageData(mask,0,0);maskBlob=await new Promise(r=>capCanvas.toBlob(r,'image/png'))}
+  if(!skip.has('depth'))depthBlob=await png16(w,h,depth);
   const tv=Math.tan(THREE.MathUtils.degToRad(vfov)/2),th=tv*(w/h);
   const id=String(frames.length+1).padStart(5,'0');
   const objects=[];
-  for(const ob of objs.values()){if(ob.n<40)continue;const s=SKUS[ob.seg-1];const ii=ob.inst===65535?null:ob.inst;const p=ii!==null&&instInfo[s.id]?instInfo[s.id][ii]:null;
-    objects.push({sku:s.sku,class_id:s.id,brand:s.brand,name:s.name,category:s.cat,barcode_ean13:s.barcode,price_myr:s.price,size:s.size,
-      instance:ii===null?'held':ii,held:ii===null,bbox_xywh:[ob.x0,ob.y0,ob.x1-ob.x0+1,ob.y1-ob.y0+1],visible_pixels:ob.n,mean_depth_m:+(ob.zs/ob.n).toFixed(3),
+  for(const ob of objs.values()){if(ob.n<40)continue;
+    const bbox=[ob.x0,ob.y0,ob.x1-ob.x0+1,ob.y1-ob.y0+1],md=+(ob.zs/ob.n).toFixed(3);
+    if(ob.seg===TAG_SEG){const t=tagList[ob.inst];if(!t)continue;const s=t.sku;
+      objects.push({type:'price_tag',tag_id:ob.inst,sku:s.sku,class_id:s.id,brand:s.brand,name:s.name,price_myr:s.price,price_text:s.price.toFixed(2),promo:t.promo,barcode_ean13:s.barcode,
+        bbox_xywh:bbox,visible_pixels:ob.n,mean_depth_m:md});continue}
+    const s=SKUS[ob.seg-1];if(!s)continue;const ii=(ob.inst<0||ob.inst===65535)?null:ob.inst;const p=ii!==null&&instInfo[s.id]?instInfo[s.id][ii]:null;
+    objects.push({type:'product',sku:s.sku,class_id:s.id,brand:s.brand,name:s.name,category:s.cat,barcode_ean13:s.barcode,price_myr:s.price,size:s.size,
+      instance:ii===null?'held':ii,held:ii===null,bbox_xywh:bbox,visible_pixels:ob.n,mean_depth_m:md,
+      ...(ii===null&&held?{held_view:held.view||null}:{}),
       world_xyz:p?[+p.x.toFixed(3),+p.y.toFixed(3),+p.z.toFixed(3)]:null})}
   objects.sort((a,b)=>b.visible_pixels-a.visible_pixels);
   const labels={frame:id,timestamp:new Date().toISOString(),
     camera:{model:preset.name,width:w,height:h,fx:+((w/2)/th).toFixed(3),fy:+((h/2)/tv).toFixed(3),cx:w/2,cy:h/2,hfov_deg:+(2*Math.atan(th)*180/Math.PI).toFixed(2),vfov_deg:vfov,
       depth_units:'uint16 millimetres, 0 = no data',depth_noise:noise,
       pose_world:{position:cam.position.toArray().map(v=>+v.toFixed(4)),quaternion_xyzw:cam.quaternion.toArray().map(v=>+v.toFixed(5)),convention:'three.js / OpenGL camera: -Z forward, +Y up; world Y up, metres'}},
-    mask_encoding:'R = class_id (SKU), G*256+B = instance id (65535 = held item), 0 = background',
+    mask_encoding:'R = class_id (SKU 1-254) or 255 = price tag, G*256+B = instance id (product instance, 65535 = held item; tag_id for price tags), 0 = background',
     objects};
   lastLabels=labels;
   const fr={id,rgbBlob,depthBlob,maskBlob,labels};
@@ -851,26 +880,118 @@ async function saveDataset(){
 
 /* ---------------- headless API for dataset generation ---------------- */
 const b64=async blob=>{const u=new Uint8Array(await blob.arrayBuffer());let s='';for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s)};
-function randomPose(seed){
+function randomPose(seed,o={}){
   const r=mulberry32(seed);const f=FACES[Math.floor(r()*FACES.length)];
-  const along=0.3+r()*(f.len-0.6);const dist=f.cat==='dairy'?0.5+r()*1.6:0.35+r()*1.2;
+  const along=0.3+r()*(f.len-0.6);const dist=Math.max(o.minDist||0,f.cat==='dairy'?0.5+r()*1.6:0.35+r()*1.2);
   let x=f.ox+f.ax*along+f.nx*dist,z=f.oz+f.az*along+f.nz*dist;[x,z]=collide(x,z);
   player.x=x;player.z=z;player.vx=player.vz=0;player.yaw=Math.atan2(f.nx,f.nz)+(r()-0.5)*1.1;player.pitch=-0.45+r()*0.5;player.eye=1.0+r()*0.75;player.crouch=player.eye<1.2;player.bob=0;
   return {x,z,yaw:player.yaw,pitch:player.pitch,eye:player.eye,face:f.cat};
 }
 function randomLighting(seed){const r=mulberry32(seed);const warm=r();hemi.color.setHSL(0.1,0.3*warm,0.95);hemi.intensity=0.5+r()*0.8;dl1.intensity=0.3+r()*0.8;dl2.intensity=0.2+r()*0.7;dl3.intensity=r()*0.6;renderer.toneMappingExposure=0.8+r()*0.5;dl1.position.set(r()*6-3,6,r()*10-5)}
+/* held item + hand, for "item in the shopper's hand" training and test frames */
+const SKIN=['#f1c9a5','#e0ac69','#c68642','#8d5524','#ffdbac','#a86b3c'];
+let hand=null;
+function dropHeld(){if(hand){camera.remove(hand);hand=null}if(held&&held.synthetic){if(held.obj)camera.remove(held.obj);held=null}}
+function holdItem(seed,o={}){
+  const r=mulberry32(seed);dropHeld();if(held&&held.obj){putBack(held);held=null}
+  const s=o.sku?SKUS.find(q=>q.sku===o.sku||q.id===o.sku):SKUS[Math.floor(r()*SKUS.length)];
+  if(!ASSETS[s.id])ASSETS[s.id]=buildProductAssets(s);
+  const {geo,mats}=ASSETS[s.id];
+  const m=new THREE.Mesh(geo,mats);tagSeg(m,s.seg);m.userData.held=true;
+  // which side faces the camera: front, back (barcode panel on boxes) or anything in between
+  // 'scan' = barcode side brought close to the camera, the way people scan at a self-checkout
+  const u=r();const view=o.view||(u<0.34?'front':u<0.56?'back':u<0.72?'side':u<0.85?'angled':'scan');
+  const yaw=view==='front'?(r()-0.5)*0.5:(view==='back'||view==='scan')?Math.PI+(r()-0.5)*0.4:view==='side'?(r()<0.5?1:-1)*Math.PI/2+(r()-0.5)*0.5:(r()-0.5)*2*Math.PI;
+  const size=Math.max(s.h,s.w);
+  const dist=o.dist??(view==='scan'?0.17+size*0.45+r()*0.06:0.22+size*0.9+r()*0.25);
+  // geometry origin is at the pack's base; centre it vertically on the hold point
+  const piv=new THREE.Group();m.position.y=-s.h/2;piv.add(m);
+  // offsets scale with distance so the item stays inside even the narrow D435 view
+  piv.position.set((r()-0.5)*0.3*dist,-(0.03+r()*0.22)*dist,-dist);
+  piv.rotation.set((r()-0.5)*0.5,yaw,(r()-0.5)*0.35,'YXZ');
+  camera.add(piv);camera.updateMatrixWorld(true);
+  // hand: palm on the right edge, four fingers across the front, forearm leaving frame bottom-right
+  const bb=new THREE.Box3().setFromObject(m);const inv=new THREE.Matrix4().copy(camera.matrixWorld).invert();bb.applyMatrix4(inv);
+  const skin=new THREE.MeshStandardMaterial({color:SKIN[Math.floor(r()*SKIN.length)],roughness:0.75});
+  hand=new THREE.Group();const fw=0.017,fl=Math.min(0.09,(bb.max.x-bb.min.x)*(0.35+r()*0.3)+0.02);
+  const front=bb.max.z+0.004,midY=bb.min.y+(bb.max.y-bb.min.y)*(0.25+r()*0.3);
+  for(let i=0;i<4;i++){const f=new THREE.Mesh(new THREE.CapsuleGeometry(fw/2,fl,4,8),skin);f.rotation.z=Math.PI/2;f.position.set(bb.max.x-fl/2+0.01,midY+(i-1.5)*fw*1.05,front);hand.add(f)}
+  const palm=new THREE.Mesh(new THREE.BoxGeometry(0.03,0.09,Math.max(0.05,bb.max.z-bb.min.z)*0.9),skin);palm.position.set(bb.max.x+0.016,midY,(bb.max.z+bb.min.z)/2);hand.add(palm);
+  const thumb=new THREE.Mesh(new THREE.CapsuleGeometry(0.011,0.05,4,8),skin);thumb.rotation.z=0.6;thumb.position.set(bb.max.x-0.005,midY+0.055,front);hand.add(thumb);
+  const arm=new THREE.Mesh(new THREE.CylinderGeometry(0.028,0.034,0.45,10),skin);arm.position.set(bb.max.x+0.09,midY-0.2,(bb.max.z+bb.min.z)/2+0.05);arm.rotation.z=0.55;hand.add(arm);
+  hand.traverse(q=>{if(q.isMesh)tagSeg(q,0)});
+  if(o.hand!==false)camera.add(hand);
+  held={sku:s,obj:piv,spin:yaw,synthetic:true,view};
+  return {sku:s.sku,view,dist:+dist.toFixed(3)};
+}
+
+/* clean reference ("catalogue") photos of one product, for the embedding gallery */
+const refScene=new THREE.Scene();
+{const h=new THREE.HemisphereLight('#ffffff','#9a9a9a',1.0);refScene.add(h);const d=new THREE.DirectionalLight('#ffffff',1.1);d.position.set(1,2,3);refScene.add(d);const d2=new THREE.DirectionalLight('#ffffff',0.4);d2.position.set(-2,1,-1);refScene.add(d2)}
+const REF_VIEWS={front:[0,0.08],back:[Math.PI,0.08],left:[Math.PI/2,0.08],right:[-Math.PI/2,0.08],front_high:[0.5,0.45],back_high:[Math.PI-0.5,0.45],front_low:[-0.45,-0.25],three_quarter:[-0.8,0.2]};
+async function renderReference(skuKey,view='front',size=320,bg='#d8d8d6'){
+  const s=SKUS.find(q=>q.sku===skuKey||q.id===skuKey);if(!ASSETS[s.id])ASSETS[s.id]=buildProductAssets(s);
+  const {geo,mats}=ASSETS[s.id];const m=new THREE.Mesh(geo,mats);m.position.y=-s.h/2;
+  const [yaw,pitch]=REF_VIEWS[view]||REF_VIEWS.front;const piv=new THREE.Group();piv.add(m);piv.rotation.set(0,yaw,0);refScene.add(piv);
+  refScene.environment=scene.environment;refScene.background=new THREE.Color(bg);
+  const rad=Math.hypot(s.w,s.h,s.d)/2;const cam=new THREE.PerspectiveCamera(30,1,0.01,10);const dist=rad/Math.sin(THREE.MathUtils.degToRad(15))*1.08;
+  cam.position.set(0,Math.sin(pitch)*dist,Math.cos(pitch)*dist);cam.lookAt(0,0,0);
+  const pr=renderer.getPixelRatio(),sz=new THREE.Vector2();renderer.getSize(sz);const ex=renderer.toneMappingExposure;
+  renderer.toneMappingExposure=1.0;renderer.setPixelRatio(1);renderer.setSize(size,size,false);renderer.render(refScene,cam);
+  capCanvas.width=size;capCanvas.height=size;capCanvas.getContext('2d').drawImage(renderer.domElement,0,0);
+  renderer.setPixelRatio(pr);renderer.setSize(sz.x,sz.y,false);renderer.toneMappingExposure=ex;refScene.remove(piv);
+  return b64(await new Promise(r=>capCanvas.toBlob(r,'image/jpeg',0.92)));
+}
+
 window.sim={
-  catalog:()=>SKUS.map(s=>({class_id:s.id,sku:s.sku,brand:s.brand,name:s.name,category:s.cat,price_myr:s.price,barcode_ean13:s.barcode})),
+  holdItem:(seed,o)=>{const r=holdItem(seed,o);updatePlayer(0);return r},
+  dropHeld:()=>dropHeld(),
+  refViews:()=>Object.keys(REF_VIEWS),
+  renderReference,
+  catalog:()=>SKUS.map(s=>({class_id:s.id,sku:s.sku,brand:s.brand,name:s.name,category:s.cat,price_myr:s.price,barcode_ean13:s.barcode,size:s.size,shape:s.shape})),
   setPreset:k=>{applyPreset(k);$('preset').value=k},
   setPose:p=>{Object.assign(player,p);player.vx=player.vz=0;updatePlayer(0)},
-  randomPose:seed=>{const p=randomPose(seed);updatePlayer(0);return p},
+  randomPose:(seed,o)=>{const p=randomPose(seed,o);updatePlayer(0);return p},
   restock:seed=>stock(seed),
   randomLighting,
-  capture:async(o={})=>{updatePlayer(0);const f=await capture({...o,headless:true});return{id:f.id,rgb:await b64(f.rgbBlob),depth:await b64(f.depthBlob),mask:await b64(f.maskBlob),labels:f.labels}},
+  // o: {noise, format:'png'|'jpg', skip:['depth','mask']}
+  capture:async(o={})=>{updatePlayer(0);const f=await capture({...o,headless:true});const e=async b=>b?b64(b):null;return{id:f.id,rgb:await e(f.rgbBlob),depth:await e(f.depthBlob),mask:await e(f.maskBlob),labels:f.labels}},
   stats:()=>({instances:productMeshes.reduce((a,m)=>a+m.count,0),perSku:Object.fromEntries(productMeshes.map(m=>[m.userData.sku.name,m.count])),info:renderer.info.render}),
   paused:false,
   ready:false
 };
+
+/* ---------------- vision model bridge (vision/serve.py) ---------------- */
+const VISION_URL=new URLSearchParams(location.search).get('vision')||'http://127.0.0.1:8770';
+const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let lensT=0,asking=false;
+function simTruth(labels){
+  const h=labels.objects.find(o=>o.held);if(h)return{sku:h.sku,title:h.brand+' '+h.name,how:'in hand'};
+  const W=labels.camera.width,H=labels.camera.height;
+  const u=labels.objects.filter(o=>o.type==='product'&&o.bbox_xywh[0]<=W/2&&W/2<=o.bbox_xywh[0]+o.bbox_xywh[2]&&o.bbox_xywh[1]<=H/2&&H/2<=o.bbox_xywh[1]+o.bbox_xywh[3]);
+  if(!u.length)return null;const o=u.sort((a,b)=>a.bbox_xywh[2]*a.bbox_xywh[3]-b.bbox_xywh[2]*b.bbox_xywh[3])[0];return{sku:o.sku,title:o.brand+' '+o.name,how:'under the ring'};
+}
+async function askVision(){
+  if(asking)return;asking=true;const el=$('lens');el.hidden=false;el.innerHTML='<div class="t">Looking…</div>';clearTimeout(lensT);
+  try{
+    const f=await window.sim.capture({noise:true,format:'jpg',skip:['mask']});
+    let j;
+    try{const r=await fetch(VISION_URL+'/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rgb:f.rgb,depth:f.depth,basket_total:basket.reduce((a,b)=>a+b.sku.price,0)})});j=await r.json()}
+    catch(_){el.innerHTML='<div class="h">Vision server not running</div><div class="l">Start it on this computer with <code>python vision/serve.py</code>, then press V again.</div>';$('vstat').textContent='offline';return}
+    const v=j.verdict,it=j.item,truth=simTruth(f.labels);let h='';
+    if(!it){h='<div class="h">No product in view</div><div class="l">Hold a product up, or put the ring on a pack.</div>'}
+    else{
+      h+=`<div class="h${v&&v.alerts&&v.alerts.length?' al':''}">${esc(v?v.headline:'')}</div>`;
+      if(it.sku)h+=`<div>${esc(it.title)} · <b>RM ${(+it.price_myr).toFixed(2)}</b> <span class="t">(${esc(it.price_source)})</span></div>`;
+      for(const l of (v?v.lines:[]).slice(it.sku?1:0,4))h+=`<div class="l">${esc(l)}</div>`;
+      h+=`<div class="t">${esc(j.mode==='held'?'Item in hand':'Looking at')} · ${esc(it.method)}${it.confidence!=null?' '+(+it.confidence).toFixed(2):''}${it.depth_m?' · '+it.depth_m.toFixed(2)+' m':''}</div>`;
+    }
+    if(truth)h+=`<div class="t">Simulator truth: ${esc(truth.title)} ${it&&it.sku===truth.sku?'<span class="ok">✓ right</span>':it&&it.sku?'<span class="no">✗ wrong</span>':'<span class="no">– no answer</span>'}</div>`;
+    h+=`<div class="t">${Math.round(j.timings_ms.total_ms)} ms on the vision server</div>`;
+    el.innerHTML=h;$('vstat').textContent='connected';
+  }finally{asking=false;lensT=setTimeout(()=>{$('lens').hidden=true},9000)}
+}
+$('askv').onclick=askVision;
 
 /* ---------------- input ---------------- */
 function setMode(m){mode=m;for(let i=0;i<4;i++)$('m'+i).setAttribute('aria-pressed',String(i===m))}
@@ -890,6 +1011,7 @@ addEventListener('keydown',e=>{if(e.target.tagName==='SELECT')return;keys[e.code
   if(e.code==='KeyB')toBasket();
   if(e.code==='KeyE'||e.code==='Space'){pick();e.preventDefault()}
   if(e.code==='KeyP')capture();
+  if(e.code==='KeyV')askVision();
   if(e.code==='KeyR'&&held){held.spin+=Math.PI/2}
   if(/^Digit[1-4]$/.test(e.code))setMode(+e.code.slice(5)-1)});
 addEventListener('keyup',e=>{keys[e.code]=false});

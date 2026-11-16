@@ -17,6 +17,7 @@ Open `index.html` in a desktop browser (Chrome, Edge, Firefox, Safari). It needs
 | Wheel or R | Turn the held product to read the back panel and barcode |
 | B / right-click | Drop the held product in the basket (running total in RM) |
 | P | Capture a training frame |
+| V | Ask AisleLens: send this frame to the vision model (`python vision/serve.py`) and show its verdict, with the simulator's ground truth underneath |
 | 1 / 2 / 3 / 4 | RGB, depth, label mask, RGB with depth inset |
 
 Phones and tablets get a joystick on the left and drag-to-look on the right.
@@ -45,8 +46,9 @@ Each capture writes, aligned pixel for pixel:
 | --- | --- |
 | `rgb/NNNNN.png` | 8-bit colour |
 | `depth/NNNNN.png` | 16-bit, millimetres, 0 = no data. Same convention as `rs2::depth_frame` with `depth_scale` 0.001, so the RealSense test code can read sim and real frames the same way |
-| `mask/NNNNN.png` | R = class id (SKU), G·256 + B = instance id (65535 = the held item) |
-| `labels/NNNNN.json` | Camera intrinsics (fx, fy, cx, cy), camera pose, and per visible product: SKU, brand, name, EAN-13, price, 2D box (x, y, w, h), visible pixels, mean depth, world position |
+| `mask/NNNNN.png` | R = class id (SKU) or 255 = price tag, G·256 + B = instance id (65535 = the held item, tag id for price tags) |
+| `labels/NNNNN.json` | Camera intrinsics (fx, fy, cx, cy), camera pose, planogram id, and per visible object: `type` product or price_tag; SKU, brand, name, EAN-13, price, 2D box (x, y, w, h), visible pixels, mean depth; for products the world position and `held` (with `held_view`: front, back, side, angled or scan); for tags the printed price text and promo flag |
+| `gallery/SKU/view.jpg` | With `--refs`: 8 clean reference photos per product (front, back, sides, high, low, three-quarter) for the embedding gallery |
 | `catalog.json` | The class list |
 
 The depth noise option adds RealSense-like artefacts: depth error growing with distance squared, missing pixels at object edges, and no data outside the sensor range. Turn it off for clean ground truth.
@@ -63,7 +65,7 @@ node generate_dataset.mjs --frames 500 --camera d435 --out ./dataset --gpu
 
 It uses the Chrome or Edge already installed on the machine, so `npm i playwright` is the only setup. Pass `--browser chromium` to use Playwright's own browser instead (run `npx playwright install chromium` first).
 
-The script puts a virtual shopper at random positions and angles in front of the shelves (eye height 1.0 to 1.75 m, looking up and down), re-stocks every 50 frames, changes the lighting every frame, and writes the files above. With `--gpu` on a normal laptop it does a few frames per second. Without a GPU it falls back to software rendering at about one frame every 10 seconds.
+The script puts a virtual shopper at random positions and angles in front of the shelves (eye height 1.0 to 1.75 m, looking up and down), re-stocks every 50 frames, changes the lighting every frame, and writes the files above. In a share of frames (`--held-ratio`, default 0.35) the shopper holds a product in a simple hand, 0.3 to 0.7 m from the camera, showing the front, back, a side, a random angle, or the barcode close up ("scan"). `--jpg` writes RGB as JPEG and `--skip depth,mask` leaves those out, which keeps a 1,500-frame training set near 300 MB. Use a different `--seed` for train, validation and test so the test shelves are layouts the model never saw. With `--gpu` on a normal laptop it does a few frames per second. Without a GPU it falls back to software rendering at about one frame every 10 seconds.
 
 In the browser, the **Save dataset .zip** button bundles the frames captured by hand. Browsers block downloads inside the hosted Claude viewer, so use it from a local copy of `index.html`.
 
@@ -72,8 +74,11 @@ In the browser, the **Save dataset .zip** button bundles the frames captured by 
 `window.sim` is available once the page has loaded:
 
 ```js
-await sim.capture({ noise: true })   // { rgb, depth, mask (base64 PNG), labels }
-sim.randomPose(seed)                  // jump to a random shelf-facing pose
+await sim.capture({ noise: true, format: 'jpg', skip: ['mask'] })   // { rgb, depth, mask (base64), labels }
+sim.holdItem(seed, { sku, view })     // put a product in the shopper's hand
+sim.dropHeld()
+await sim.renderReference('AL-011', 'back', 320)  // clean catalogue photo (base64 JPEG); sim.refViews() lists views
+sim.randomPose(seed, { minDist })     // jump to a random shelf-facing pose
 sim.setPose({ x, z, yaw, pitch, eye })
 sim.restock(seed)                     // new planogram
 sim.randomLighting(seed)
