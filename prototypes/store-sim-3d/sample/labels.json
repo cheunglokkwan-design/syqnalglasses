@@ -1,0 +1,4142 @@
+{
+ "frame": "00002",
+ "timestamp": "2026-11-16T07:16:33.047Z",
+ "camera": {
+  "model": "Intel RealSense D455 (color aligned)",
+  "width": 1280,
+  "height": 800,
+  "fx": 627.874,
+  "fy": 627.874,
+  "cx": 640,
+  "cy": 400,
+  "hfov_deg": 91.1,
+  "vfov_deg": 65,
+  "depth_units": "uint16 millimetres, 0 = no data",
+  "depth_noise": true,
+  "pose_world": {
+   "position": [
+    11.3662,
+    1.0168,
+    1.4358
+   ],
+   "quaternion_xyzw": [
+    -0.01288,
+    0.96552,
+    0.04868,
+    0.25539
+   ],
+   "convention": "three.js / OpenGL camera: -Z forward, +Y up; world Y up, metres"
+  }
+ },
+ "mask_encoding": "R = class_id (SKU), G*256+B = instance id (65535 = held item), 0 = background",
+ "objects": [
+  {
+   "sku": "AL-013",
+   "class_id": 13,
+   "brand": "Alpine Vale",
+   "name": "Muesli Fruit & Nut",
+   "category": "breakfast",
+   "barcode_ean13": "2000311029477",
+   "price_myr": 21.9,
+   "size": "750 g",
+   "instance": 144,
+   "held": false,
+   "bbox_xywh": [
+    154,
+    411,
+    217,
+    287
+   ],
+   "visible_pixels": 52587,
+   "mean_depth_m": 0.724,
+   "world_xyz": [
+    11.387,
+    0.62,
+    2.295
+   ]
+  },
+  {
+   "sku": "AL-013",
+   "class_id": 13,
+   "brand": "Alpine Vale",
+   "name": "Muesli Fruit & Nut",
+   "category": "breakfast",
+   "barcode_ean13": "2000311029477",
+   "price_myr": 21.9,
+   "size": "750 g",
+   "instance": 147,
+   "held": false,
+   "bbox_xywh": [
+    0,
+    421,
+    175,
+    317
+   ],
+   "visible_pixels": 48498,
+   "mean_depth_m": 0.644,
+   "world_xyz": [
+    11.591,
+    0.62,
+    2.294
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 297,
+   "held": false,
+   "bbox_xywh": [
+    499,
+    136,
+    142,
+    213
+   ],
+   "visible_pixels": 28315,
+   "mean_depth_m": 0.883,
+   "world_xyz": [
+    10.99,
+    1,
+    2.297
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 294,
+   "held": false,
+   "bbox_xywh": [
+    641,
+    156,
+    107,
+    192
+   ],
+   "visible_pixels": 19266,
+   "mean_depth_m": 0.978,
+   "world_xyz": [
+    10.79,
+    1,
+    2.294
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 291,
+   "held": false,
+   "bbox_xywh": [
+    745,
+    173,
+    86,
+    174
+   ],
+   "visible_pixels": 13756,
+   "mean_depth_m": 1.075,
+   "world_xyz": [
+    10.602,
+    1,
+    2.296
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 288,
+   "held": false,
+   "bbox_xywh": [
+    827,
+    187,
+    80,
+    159
+   ],
+   "visible_pixels": 11503,
+   "mean_depth_m": 1.169,
+   "world_xyz": [
+    10.402,
+    1,
+    2.294
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 714,
+   "held": false,
+   "bbox_xywh": [
+    13,
+    246,
+    110,
+    108
+   ],
+   "visible_pixels": 10600,
+   "mean_depth_m": 0.629,
+   "world_xyz": [
+    11.555,
+    1,
+    2.302
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 285,
+   "held": false,
+   "bbox_xywh": [
+    901,
+    199,
+    68,
+    146
+   ],
+   "visible_pixels": 8750,
+   "mean_depth_m": 1.269,
+   "world_xyz": [
+    10.206,
+    1,
+    2.296
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 712,
+   "held": false,
+   "bbox_xywh": [
+    125,
+    251,
+    94,
+    101
+   ],
+   "visible_pixels": 8546,
+   "mean_depth_m": 0.669,
+   "world_xyz": [
+    11.467,
+    1,
+    2.301
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 710,
+   "held": false,
+   "bbox_xywh": [
+    223,
+    256,
+    82,
+    96
+   ],
+   "visible_pixels": 7138,
+   "mean_depth_m": 0.71,
+   "world_xyz": [
+    11.381,
+    1,
+    2.3
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 282,
+   "held": false,
+   "bbox_xywh": [
+    962,
+    210,
+    62,
+    134
+   ],
+   "visible_pixels": 7107,
+   "mean_depth_m": 1.366,
+   "world_xyz": [
+    10.01,
+    1,
+    2.295
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 381,
+   "held": false,
+   "bbox_xywh": [
+    1064,
+    62,
+    63,
+    126
+   ],
+   "visible_pixels": 6391,
+   "mean_depth_m": 1.529,
+   "world_xyz": [
+    9.592,
+    1.38,
+    2.299
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 708,
+   "held": false,
+   "bbox_xywh": [
+    302,
+    260,
+    74,
+    91
+   ],
+   "visible_pixels": 6094,
+   "mean_depth_m": 0.748,
+   "world_xyz": [
+    11.301,
+    1,
+    2.3
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 279,
+   "held": false,
+   "bbox_xywh": [
+    1053,
+    227,
+    60,
+    116
+   ],
+   "visible_pixels": 6008,
+   "mean_depth_m": 1.568,
+   "world_xyz": [
+    9.594,
+    1,
+    2.301
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 262,
+   "held": false,
+   "bbox_xywh": [
+    741,
+    702,
+    62,
+    98
+   ],
+   "visible_pixels": 5107,
+   "mean_depth_m": 1.202,
+   "world_xyz": [
+    10.567,
+    0.12,
+    2.318
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 260,
+   "held": false,
+   "bbox_xywh": [
+    791,
+    684,
+    61,
+    104
+   ],
+   "visible_pixels": 4945,
+   "mean_depth_m": 1.267,
+   "world_xyz": [
+    10.434,
+    0.12,
+    2.319
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 588,
+   "held": false,
+   "bbox_xywh": [
+    476,
+    534,
+    57,
+    87
+   ],
+   "visible_pixels": 4505,
+   "mean_depth_m": 0.884,
+   "world_xyz": [
+    11.1,
+    0.62,
+    2.299
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 264,
+   "held": false,
+   "bbox_xywh": [
+    687,
+    719,
+    64,
+    81
+   ],
+   "visible_pixels": 4497,
+   "mean_depth_m": 1.147,
+   "world_xyz": [
+    10.693,
+    0.12,
+    2.322
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 276,
+   "held": false,
+   "bbox_xywh": [
+    1105,
+    233,
+    46,
+    110
+   ],
+   "visible_pixels": 4060,
+   "mean_depth_m": 1.664,
+   "world_xyz": [
+    9.395,
+    1,
+    2.296
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 378,
+   "held": false,
+   "bbox_xywh": [
+    1118,
+    79,
+    45,
+    118
+   ],
+   "visible_pixels": 4016,
+   "mean_depth_m": 1.63,
+   "world_xyz": [
+    9.397,
+    1.38,
+    2.297
+   ]
+  },
+  {
+   "sku": "AL-011",
+   "class_id": 11,
+   "brand": "NutHouse",
+   "name": "Smooth Peanut Butter",
+   "category": "breakfast",
+   "barcode_ean13": "2000310871091",
+   "price_myr": 11.9,
+   "size": "462 g",
+   "instance": 94,
+   "held": false,
+   "bbox_xywh": [
+    534,
+    0,
+    66,
+    67
+   ],
+   "visible_pixels": 3824,
+   "mean_depth_m": 0.86,
+   "world_xyz": [
+    10.99,
+    1.38,
+    2.306
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 258,
+   "held": false,
+   "bbox_xywh": [
+    830,
+    668,
+    59,
+    99
+   ],
+   "visible_pixels": 3786,
+   "mean_depth_m": 1.33,
+   "world_xyz": [
+    10.315,
+    0.12,
+    2.324
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 266,
+   "held": false,
+   "bbox_xywh": [
+    627,
+    738,
+    68,
+    62
+   ],
+   "visible_pixels": 3675,
+   "mean_depth_m": 1.096,
+   "world_xyz": [
+    10.818,
+    0.12,
+    2.324
+   ]
+  },
+  {
+   "sku": "AL-011",
+   "class_id": 11,
+   "brand": "NutHouse",
+   "name": "Smooth Peanut Butter",
+   "category": "breakfast",
+   "barcode_ean13": "2000310871091",
+   "price_myr": 11.9,
+   "size": "462 g",
+   "instance": 92,
+   "held": false,
+   "bbox_xywh": [
+    598,
+    4,
+    57,
+    76
+   ],
+   "visible_pixels": 3659,
+   "mean_depth_m": 0.908,
+   "world_xyz": [
+    10.895,
+    1.38,
+    2.31
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 586,
+   "held": false,
+   "bbox_xywh": [
+    582,
+    518,
+    50,
+    77
+   ],
+   "visible_pixels": 3633,
+   "mean_depth_m": 0.971,
+   "world_xyz": [
+    10.932,
+    0.62,
+    2.305
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 256,
+   "held": false,
+   "bbox_xywh": [
+    869,
+    654,
+    57,
+    93
+   ],
+   "visible_pixels": 3596,
+   "mean_depth_m": 1.393,
+   "world_xyz": [
+    10.188,
+    0.12,
+    2.326
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 254,
+   "held": false,
+   "bbox_xywh": [
+    908,
+    643,
+    57,
+    88
+   ],
+   "visible_pixels": 3399,
+   "mean_depth_m": 1.448,
+   "world_xyz": [
+    10.061,
+    0.12,
+    2.318
+   ]
+  },
+  {
+   "sku": "AL-011",
+   "class_id": 11,
+   "brand": "NutHouse",
+   "name": "Smooth Peanut Butter",
+   "category": "breakfast",
+   "barcode_ean13": "2000310871091",
+   "price_myr": 11.9,
+   "size": "462 g",
+   "instance": 90,
+   "held": false,
+   "bbox_xywh": [
+    655,
+    22,
+    55,
+    71
+   ],
+   "visible_pixels": 3357,
+   "mean_depth_m": 0.958,
+   "world_xyz": [
+    10.794,
+    1.38,
+    2.311
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 299,
+   "held": false,
+   "bbox_xywh": [
+    469,
+    163,
+    23,
+    184
+   ],
+   "visible_pixels": 3260,
+   "mean_depth_m": 0.989,
+   "world_xyz": [
+    10.994,
+    1,
+    2.448
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 584,
+   "held": false,
+   "bbox_xywh": [
+    631,
+    511,
+    47,
+    74
+   ],
+   "visible_pixels": 3244,
+   "mean_depth_m": 1.011,
+   "world_xyz": [
+    10.846,
+    0.62,
+    2.303
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 273,
+   "held": false,
+   "bbox_xywh": [
+    1143,
+    240,
+    39,
+    103
+   ],
+   "visible_pixels": 3178,
+   "mean_depth_m": 1.77,
+   "world_xyz": [
+    9.201,
+    1,
+    2.3
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 375,
+   "held": false,
+   "bbox_xywh": [
+    1155,
+    94,
+    39,
+    110
+   ],
+   "visible_pixels": 3148,
+   "mean_depth_m": 1.731,
+   "world_xyz": [
+    9.195,
+    1.38,
+    2.3
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 271,
+   "held": false,
+   "bbox_xywh": [
+    469,
+    744,
+    70,
+    56
+   ],
+   "visible_pixels": 3119,
+   "mean_depth_m": 1.088,
+   "world_xyz": [
+    11.064,
+    0.12,
+    2.447
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 372,
+   "held": false,
+   "bbox_xywh": [
+    1185,
+    106,
+    40,
+    106
+   ],
+   "visible_pixels": 3116,
+   "mean_depth_m": 1.818,
+   "world_xyz": [
+    8.999,
+    1.38,
+    2.294
+   ]
+  },
+  {
+   "sku": "AL-011",
+   "class_id": 11,
+   "brand": "NutHouse",
+   "name": "Smooth Peanut Butter",
+   "category": "breakfast",
+   "barcode_ean13": "2000310871091",
+   "price_myr": 11.9,
+   "size": "462 g",
+   "instance": 96,
+   "held": false,
+   "bbox_xywh": [
+    463,
+    0,
+    71,
+    52
+   ],
+   "visible_pixels": 3023,
+   "mean_depth_m": 0.815,
+   "world_xyz": [
+    11.09,
+    1.38,
+    2.308
+   ]
+  },
+  {
+   "sku": "AL-011",
+   "class_id": 11,
+   "brand": "NutHouse",
+   "name": "Smooth Peanut Butter",
+   "category": "breakfast",
+   "barcode_ean13": "2000310871091",
+   "price_myr": 11.9,
+   "size": "462 g",
+   "instance": 88,
+   "held": false,
+   "bbox_xywh": [
+    748,
+    50,
+    54,
+    64
+   ],
+   "visible_pixels": 2938,
+   "mean_depth_m": 1.054,
+   "world_xyz": [
+    10.6,
+    1.38,
+    2.309
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 269,
+   "held": false,
+   "bbox_xywh": [
+    535,
+    725,
+    65,
+    70
+   ],
+   "visible_pixels": 2870,
+   "mean_depth_m": 1.141,
+   "world_xyz": [
+    10.945,
+    0.12,
+    2.445
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 582,
+   "held": false,
+   "bbox_xywh": [
+    675,
+    504,
+    45,
+    70
+   ],
+   "visible_pixels": 2834,
+   "mean_depth_m": 1.054,
+   "world_xyz": [
+    10.76,
+    0.62,
+    2.304
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 270,
+   "held": false,
+   "bbox_xywh": [
+    1174,
+    244,
+    38,
+    98
+   ],
+   "visible_pixels": 2815,
+   "mean_depth_m": 1.858,
+   "world_xyz": [
+    9.003,
+    1,
+    2.296
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 252,
+   "held": false,
+   "bbox_xywh": [
+    941,
+    630,
+    55,
+    83
+   ],
+   "visible_pixels": 2815,
+   "mean_depth_m": 1.515,
+   "world_xyz": [
+    9.931,
+    0.12,
+    2.322
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 580,
+   "held": false,
+   "bbox_xywh": [
+    718,
+    498,
+    45,
+    67
+   ],
+   "visible_pixels": 2737,
+   "mean_depth_m": 1.097,
+   "world_xyz": [
+    10.668,
+    0.62,
+    2.301
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 267,
+   "held": false,
+   "bbox_xywh": [
+    599,
+    705,
+    62,
+    66
+   ],
+   "visible_pixels": 2677,
+   "mean_depth_m": 1.205,
+   "world_xyz": [
+    10.814,
+    0.12,
+    2.447
+   ]
+  },
+  {
+   "sku": "AL-011",
+   "class_id": 11,
+   "brand": "NutHouse",
+   "name": "Smooth Peanut Butter",
+   "category": "breakfast",
+   "barcode_ean13": "2000310871091",
+   "price_myr": 11.9,
+   "size": "462 g",
+   "instance": 86,
+   "held": false,
+   "bbox_xywh": [
+    801,
+    63,
+    46,
+    62
+   ],
+   "visible_pixels": 2448,
+   "mean_depth_m": 1.099,
+   "world_xyz": [
+    10.496,
+    1.38,
+    2.306
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 268,
+   "held": false,
+   "bbox_xywh": [
+    561,
+    760,
+    72,
+    40
+   ],
+   "visible_pixels": 2439,
+   "mean_depth_m": 1.058,
+   "world_xyz": [
+    10.942,
+    0.12,
+    2.325
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 267,
+   "held": false,
+   "bbox_xywh": [
+    1203,
+    249,
+    35,
+    93
+   ],
+   "visible_pixels": 2383,
+   "mean_depth_m": 1.955,
+   "world_xyz": [
+    8.809,
+    1,
+    2.296
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 265,
+   "held": false,
+   "bbox_xywh": [
+    655,
+    687,
+    58,
+    60
+   ],
+   "visible_pixels": 2333,
+   "mean_depth_m": 1.269,
+   "world_xyz": [
+    10.686,
+    0.12,
+    2.45
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 298,
+   "held": false,
+   "bbox_xywh": [
+    487,
+    153,
+    17,
+    195
+   ],
+   "visible_pixels": 2314,
+   "mean_depth_m": 0.937,
+   "world_xyz": [
+    10.986,
+    1,
+    2.369
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 369,
+   "held": false,
+   "bbox_xywh": [
+    1217,
+    118,
+    32,
+    99
+   ],
+   "visible_pixels": 2291,
+   "mean_depth_m": 1.917,
+   "world_xyz": [
+    8.805,
+    1.38,
+    2.295
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 578,
+   "held": false,
+   "bbox_xywh": [
+    755,
+    492,
+    43,
+    65
+   ],
+   "visible_pixels": 2237,
+   "mean_depth_m": 1.135,
+   "world_xyz": [
+    10.586,
+    0.62,
+    2.3
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 576,
+   "held": false,
+   "bbox_xywh": [
+    791,
+    487,
+    41,
+    62
+   ],
+   "visible_pixels": 2119,
+   "mean_depth_m": 1.178,
+   "world_xyz": [
+    10.497,
+    0.62,
+    2.299
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 366,
+   "held": false,
+   "bbox_xywh": [
+    1241,
+    130,
+    32,
+    93
+   ],
+   "visible_pixels": 2106,
+   "mean_depth_m": 2.02,
+   "world_xyz": [
+    8.608,
+    1.38,
+    2.298
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 264,
+   "held": false,
+   "bbox_xywh": [
+    1229,
+    253,
+    32,
+    89
+   ],
+   "visible_pixels": 2037,
+   "mean_depth_m": 2.057,
+   "world_xyz": [
+    8.608,
+    1,
+    2.299
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 263,
+   "held": false,
+   "bbox_xywh": [
+    706,
+    673,
+    56,
+    53
+   ],
+   "visible_pixels": 2001,
+   "mean_depth_m": 1.325,
+   "world_xyz": [
+    10.563,
+    0.12,
+    2.443
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 248,
+   "held": false,
+   "bbox_xywh": [
+    1035,
+    598,
+    45,
+    71
+   ],
+   "visible_pixels": 1928,
+   "mean_depth_m": 1.71,
+   "world_xyz": [
+    9.538,
+    0.12,
+    2.326
+   ]
+  },
+  {
+   "sku": "AL-011",
+   "class_id": 11,
+   "brand": "NutHouse",
+   "name": "Smooth Peanut Butter",
+   "category": "breakfast",
+   "barcode_ean13": "2000310871091",
+   "price_myr": 11.9,
+   "size": "462 g",
+   "instance": 82,
+   "held": false,
+   "bbox_xywh": [
+    880,
+    84,
+    38,
+    57
+   ],
+   "visible_pixels": 1896,
+   "mean_depth_m": 1.191,
+   "world_xyz": [
+    10.304,
+    1.38,
+    2.304
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 574,
+   "held": false,
+   "bbox_xywh": [
+    823,
+    482,
+    41,
+    60
+   ],
+   "visible_pixels": 1856,
+   "mean_depth_m": 1.221,
+   "world_xyz": [
+    10.411,
+    0.62,
+    2.301
+   ]
+  },
+  {
+   "sku": "AL-011",
+   "class_id": 11,
+   "brand": "NutHouse",
+   "name": "Smooth Peanut Butter",
+   "category": "breakfast",
+   "barcode_ean13": "2000310871091",
+   "price_myr": 11.9,
+   "size": "462 g",
+   "instance": 84,
+   "held": false,
+   "bbox_xywh": [
+    846,
+    75,
+    36,
+    58
+   ],
+   "visible_pixels": 1829,
+   "mean_depth_m": 1.147,
+   "world_xyz": [
+    10.401,
+    1.38,
+    2.31
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 261,
+   "held": false,
+   "bbox_xywh": [
+    750,
+    659,
+    55,
+    49
+   ],
+   "visible_pixels": 1785,
+   "mean_depth_m": 1.385,
+   "world_xyz": [
+    10.439,
+    0.12,
+    2.444
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 244,
+   "held": false,
+   "bbox_xywh": [
+    1077,
+    582,
+    51,
+    66
+   ],
+   "visible_pixels": 1765,
+   "mean_depth_m": 1.829,
+   "world_xyz": [
+    9.286,
+    0.12,
+    2.319
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 246,
+   "held": false,
+   "bbox_xywh": [
+    1052,
+    589,
+    51,
+    69
+   ],
+   "visible_pixels": 1753,
+   "mean_depth_m": 1.772,
+   "world_xyz": [
+    9.415,
+    0.12,
+    2.326
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 572,
+   "held": false,
+   "bbox_xywh": [
+    853,
+    477,
+    40,
+    58
+   ],
+   "visible_pixels": 1703,
+   "mean_depth_m": 1.261,
+   "world_xyz": [
+    10.326,
+    0.62,
+    2.299
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 589,
+   "held": false,
+   "bbox_xywh": [
+    461,
+    520,
+    52,
+    78
+   ],
+   "visible_pixels": 1631,
+   "mean_depth_m": 0.961,
+   "world_xyz": [
+    11.1,
+    0.62,
+    2.386
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 587,
+   "held": false,
+   "bbox_xywh": [
+    563,
+    506,
+    45,
+    71
+   ],
+   "visible_pixels": 1608,
+   "mean_depth_m": 1.043,
+   "world_xyz": [
+    10.931,
+    0.62,
+    2.386
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 354,
+   "held": false,
+   "bbox_xywh": [
+    1169,
+    17,
+    46,
+    49
+   ],
+   "visible_pixels": 1594,
+   "mean_depth_m": 1.78,
+   "world_xyz": [
+    9.035,
+    1.76,
+    2.322
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 357,
+   "held": false,
+   "bbox_xywh": [
+    1124,
+    0,
+    48,
+    45
+   ],
+   "visible_pixels": 1584,
+   "mean_depth_m": 1.658,
+   "world_xyz": [
+    9.291,
+    1.76,
+    2.326
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 716,
+   "held": false,
+   "bbox_xywh": [
+    0,
+    251,
+    20,
+    103
+   ],
+   "visible_pixels": 1519,
+   "mean_depth_m": 0.624,
+   "world_xyz": [
+    11.638,
+    1,
+    2.302
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 259,
+   "held": false,
+   "bbox_xywh": [
+    790,
+    645,
+    53,
+    41
+   ],
+   "visible_pixels": 1502,
+   "mean_depth_m": 1.453,
+   "world_xyz": [
+    10.314,
+    0.12,
+    2.449
+   ]
+  },
+  {
+   "sku": "AL-011",
+   "class_id": 11,
+   "brand": "NutHouse",
+   "name": "Smooth Peanut Butter",
+   "category": "breakfast",
+   "barcode_ean13": "2000310871091",
+   "price_myr": 11.9,
+   "size": "462 g",
+   "instance": 80,
+   "held": false,
+   "bbox_xywh": [
+    916,
+    95,
+    32,
+    53
+   ],
+   "visible_pixels": 1493,
+   "mean_depth_m": 1.241,
+   "world_xyz": [
+    10.206,
+    1.38,
+    2.308
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 568,
+   "held": false,
+   "bbox_xywh": [
+    905,
+    469,
+    39,
+    54
+   ],
+   "visible_pixels": 1431,
+   "mean_depth_m": 1.345,
+   "world_xyz": [
+    10.159,
+    0.62,
+    2.302
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 242,
+   "held": false,
+   "bbox_xywh": [
+    1098,
+    574,
+    49,
+    64
+   ],
+   "visible_pixels": 1420,
+   "mean_depth_m": 1.89,
+   "world_xyz": [
+    9.165,
+    0.12,
+    2.32
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 566,
+   "held": false,
+   "bbox_xywh": [
+    932,
+    464,
+    39,
+    53
+   ],
+   "visible_pixels": 1390,
+   "mean_depth_m": 1.391,
+   "world_xyz": [
+    10.066,
+    0.62,
+    2.301
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 257,
+   "held": false,
+   "bbox_xywh": [
+    830,
+    632,
+    52,
+    39
+   ],
+   "visible_pixels": 1379,
+   "mean_depth_m": 1.517,
+   "world_xyz": [
+    10.182,
+    0.12,
+    2.449
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 250,
+   "held": false,
+   "bbox_xywh": [
+    1030,
+    611,
+    25,
+    72
+   ],
+   "visible_pixels": 1367,
+   "mean_depth_m": 1.635,
+   "world_xyz": [
+    9.669,
+    0.12,
+    2.324
+   ]
+  },
+  {
+   "sku": "AL-011",
+   "class_id": 11,
+   "brand": "NutHouse",
+   "name": "Smooth Peanut Butter",
+   "category": "breakfast",
+   "barcode_ean13": "2000310871091",
+   "price_myr": 11.9,
+   "size": "462 g",
+   "instance": 78,
+   "held": false,
+   "bbox_xywh": [
+    947,
+    104,
+    30,
+    51
+   ],
+   "visible_pixels": 1363,
+   "mean_depth_m": 1.29,
+   "world_xyz": [
+    10.109,
+    1.38,
+    2.309
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 570,
+   "held": false,
+   "bbox_xywh": [
+    878,
+    472,
+    39,
+    56
+   ],
+   "visible_pixels": 1363,
+   "mean_depth_m": 1.306,
+   "world_xyz": [
+    10.243,
+    0.62,
+    2.305
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 347,
+   "held": false,
+   "bbox_xywh": [
+    1228,
+    57,
+    51,
+    41
+   ],
+   "visible_pixels": 1314,
+   "mean_depth_m": 2.035,
+   "world_xyz": [
+    8.532,
+    1.76,
+    2.325
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 240,
+   "held": false,
+   "bbox_xywh": [
+    1117,
+    567,
+    48,
+    60
+   ],
+   "visible_pixels": 1297,
+   "mean_depth_m": 1.957,
+   "world_xyz": [
+    9.035,
+    0.12,
+    2.324
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 238,
+   "held": false,
+   "bbox_xywh": [
+    1136,
+    560,
+    48,
+    59
+   ],
+   "visible_pixels": 1245,
+   "mean_depth_m": 2.014,
+   "world_xyz": [
+    8.913,
+    0.12,
+    2.32
+   ]
+  },
+  {
+   "sku": "AL-011",
+   "class_id": 11,
+   "brand": "NutHouse",
+   "name": "Smooth Peanut Butter",
+   "category": "breakfast",
+   "barcode_ean13": "2000310871091",
+   "price_myr": 11.9,
+   "size": "462 g",
+   "instance": 74,
+   "held": false,
+   "bbox_xywh": [
+    1002,
+    120,
+    30,
+    48
+   ],
+   "visible_pixels": 1241,
+   "mean_depth_m": 1.383,
+   "world_xyz": [
+    9.913,
+    1.38,
+    2.305
+   ]
+  },
+  {
+   "sku": "AL-011",
+   "class_id": 11,
+   "brand": "NutHouse",
+   "name": "Smooth Peanut Butter",
+   "category": "breakfast",
+   "barcode_ean13": "2000310871091",
+   "price_myr": 11.9,
+   "size": "462 g",
+   "instance": 76,
+   "held": false,
+   "bbox_xywh": [
+    975,
+    112,
+    29,
+    49
+   ],
+   "visible_pixels": 1221,
+   "mean_depth_m": 1.338,
+   "world_xyz": [
+    10.011,
+    1.38,
+    2.309
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 564,
+   "held": false,
+   "bbox_xywh": [
+    957,
+    461,
+    37,
+    50
+   ],
+   "visible_pixels": 1196,
+   "mean_depth_m": 1.431,
+   "world_xyz": [
+    9.98,
+    0.62,
+    2.3
+   ]
+  },
+  {
+   "sku": "AL-013",
+   "class_id": 13,
+   "brand": "Alpine Vale",
+   "name": "Muesli Fruit & Nut",
+   "category": "breakfast",
+   "barcode_ean13": "2000311029477",
+   "price_myr": 21.9,
+   "size": "750 g",
+   "instance": 148,
+   "held": false,
+   "bbox_xywh": [
+    0,
+    414,
+    171,
+    16
+   ],
+   "visible_pixels": 1191,
+   "mean_depth_m": 0.717,
+   "world_xyz": [
+    11.591,
+    0.62,
+    2.37
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 255,
+   "held": false,
+   "bbox_xywh": [
+    866,
+    623,
+    51,
+    35
+   ],
+   "visible_pixels": 1156,
+   "mean_depth_m": 1.572,
+   "world_xyz": [
+    10.062,
+    0.12,
+    2.443
+   ]
+  },
+  {
+   "sku": "AL-013",
+   "class_id": 13,
+   "brand": "Alpine Vale",
+   "name": "Muesli Fruit & Nut",
+   "category": "breakfast",
+   "barcode_ean13": "2000311029477",
+   "price_myr": 21.9,
+   "size": "750 g",
+   "instance": 145,
+   "held": false,
+   "bbox_xywh": [
+    166,
+    405,
+    188,
+    16
+   ],
+   "visible_pixels": 1146,
+   "mean_depth_m": 0.802,
+   "world_xyz": [
+    11.387,
+    0.62,
+    2.372
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 253,
+   "held": false,
+   "bbox_xywh": [
+    898,
+    611,
+    51,
+    34
+   ],
+   "visible_pixels": 1116,
+   "mean_depth_m": 1.638,
+   "world_xyz": [
+    9.931,
+    0.12,
+    2.447
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 236,
+   "held": false,
+   "bbox_xywh": [
+    1154,
+    554,
+    47,
+    56
+   ],
+   "visible_pixels": 1104,
+   "mean_depth_m": 2.078,
+   "world_xyz": [
+    8.786,
+    0.12,
+    2.321
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 234,
+   "held": false,
+   "bbox_xywh": [
+    1171,
+    548,
+    46,
+    54
+   ],
+   "visible_pixels": 1027,
+   "mean_depth_m": 2.141,
+   "world_xyz": [
+    8.658,
+    0.12,
+    2.322
+   ]
+  },
+  {
+   "sku": "AL-013",
+   "class_id": 13,
+   "brand": "Alpine Vale",
+   "name": "Muesli Fruit & Nut",
+   "category": "breakfast",
+   "barcode_ean13": "2000311029477",
+   "price_myr": 21.9,
+   "size": "750 g",
+   "instance": 149,
+   "held": false,
+   "bbox_xywh": [
+    0,
+    408,
+    177,
+    15
+   ],
+   "visible_pixels": 1005,
+   "mean_depth_m": 0.776,
+   "world_xyz": [
+    11.593,
+    0.62,
+    2.443
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 232,
+   "held": false,
+   "bbox_xywh": [
+    1188,
+    542,
+    45,
+    53
+   ],
+   "visible_pixels": 1003,
+   "mean_depth_m": 2.2,
+   "world_xyz": [
+    8.53,
+    0.12,
+    2.318
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 562,
+   "held": false,
+   "bbox_xywh": [
+    976,
+    457,
+    37,
+    49
+   ],
+   "visible_pixels": 970,
+   "mean_depth_m": 1.472,
+   "world_xyz": [
+    9.9,
+    0.62,
+    2.302
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 558,
+   "held": false,
+   "bbox_xywh": [
+    1045,
+    447,
+    33,
+    45
+   ],
+   "visible_pixels": 917,
+   "mean_depth_m": 1.61,
+   "world_xyz": [
+    9.614,
+    0.62,
+    2.299
+   ]
+  },
+  {
+   "sku": "AL-013",
+   "class_id": 13,
+   "brand": "Alpine Vale",
+   "name": "Muesli Fruit & Nut",
+   "category": "breakfast",
+   "barcode_ean13": "2000311029477",
+   "price_myr": 21.9,
+   "size": "750 g",
+   "instance": 146,
+   "held": false,
+   "bbox_xywh": [
+    180,
+    400,
+    172,
+    14
+   ],
+   "visible_pixels": 905,
+   "mean_depth_m": 0.873,
+   "world_xyz": [
+    11.384,
+    0.62,
+    2.451
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 554,
+   "held": false,
+   "bbox_xywh": [
+    1077,
+    442,
+    34,
+    42
+   ],
+   "visible_pixels": 768,
+   "mean_depth_m": 1.693,
+   "world_xyz": [
+    9.446,
+    0.62,
+    2.299
+   ]
+  },
+  {
+   "sku": "AL-011",
+   "class_id": 11,
+   "brand": "NutHouse",
+   "name": "Smooth Peanut Butter",
+   "category": "breakfast",
+   "barcode_ean13": "2000310871091",
+   "price_myr": 11.9,
+   "size": "462 g",
+   "instance": 89,
+   "held": false,
+   "bbox_xywh": [
+    717,
+    71,
+    32,
+    31
+   ],
+   "visible_pixels": 746,
+   "mean_depth_m": 1.133,
+   "world_xyz": [
+    10.598,
+    1.38,
+    2.403
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 352,
+   "held": false,
+   "bbox_xywh": [
+    1211,
+    28,
+    20,
+    47
+   ],
+   "visible_pixels": 743,
+   "mean_depth_m": 1.837,
+   "world_xyz": [
+    8.909,
+    1.76,
+    2.324
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 715,
+   "held": false,
+   "bbox_xywh": [
+    113,
+    261,
+    20,
+    90
+   ],
+   "visible_pixels": 736,
+   "mean_depth_m": 0.726,
+   "world_xyz": [
+    11.557,
+    1,
+    2.385
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 556,
+   "held": false,
+   "bbox_xywh": [
+    1059,
+    444,
+    34,
+    44
+   ],
+   "visible_pixels": 694,
+   "mean_depth_m": 1.656,
+   "world_xyz": [
+    9.529,
+    0.62,
+    2.304
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 270,
+   "held": false,
+   "bbox_xywh": [
+    499,
+    785,
+    65,
+    15
+   ],
+   "visible_pixels": 675,
+   "mean_depth_m": 1.03,
+   "world_xyz": [
+    11.064,
+    0.12,
+    2.322
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 534,
+   "held": false,
+   "bbox_xywh": [
+    1216,
+    419,
+    30,
+    33
+   ],
+   "visible_pixels": 673,
+   "mean_depth_m": 2.169,
+   "world_xyz": [
+    8.495,
+    0.62,
+    2.305
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 552,
+   "held": false,
+   "bbox_xywh": [
+    1093,
+    439,
+    33,
+    42
+   ],
+   "visible_pixels": 662,
+   "mean_depth_m": 1.734,
+   "world_xyz": [
+    9.361,
+    0.62,
+    2.299
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 585,
+   "held": false,
+   "bbox_xywh": [
+    607,
+    499,
+    43,
+    25
+   ],
+   "visible_pixels": 662,
+   "mean_depth_m": 1.091,
+   "world_xyz": [
+    10.847,
+    0.62,
+    2.391
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 548,
+   "held": false,
+   "bbox_xywh": [
+    1123,
+    435,
+    33,
+    39
+   ],
+   "visible_pixels": 643,
+   "mean_depth_m": 1.82,
+   "world_xyz": [
+    9.185,
+    0.62,
+    2.298
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 245,
+   "held": false,
+   "bbox_xywh": [
+    1037,
+    568,
+    42,
+    23
+   ],
+   "visible_pixels": 613,
+   "mean_depth_m": 1.954,
+   "world_xyz": [
+    9.288,
+    0.12,
+    2.448
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 583,
+   "held": false,
+   "bbox_xywh": [
+    649,
+    494,
+    42,
+    21
+   ],
+   "visible_pixels": 589,
+   "mean_depth_m": 1.131,
+   "world_xyz": [
+    10.761,
+    0.62,
+    2.387
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 550,
+   "held": false,
+   "bbox_xywh": [
+    1107,
+    437,
+    33,
+    40
+   ],
+   "visible_pixels": 587,
+   "mean_depth_m": 1.78,
+   "world_xyz": [
+    9.272,
+    0.62,
+    2.302
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 243,
+   "held": false,
+   "bbox_xywh": [
+    1054,
+    561,
+    45,
+    22
+   ],
+   "visible_pixels": 574,
+   "mean_depth_m": 2.019,
+   "world_xyz": [
+    9.163,
+    0.12,
+    2.45
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 581,
+   "held": false,
+   "bbox_xywh": [
+    691,
+    488,
+    39,
+    21
+   ],
+   "visible_pixels": 568,
+   "mean_depth_m": 1.176,
+   "world_xyz": [
+    10.67,
+    0.62,
+    2.389
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 544,
+   "held": false,
+   "bbox_xywh": [
+    1152,
+    430,
+    30,
+    38
+   ],
+   "visible_pixels": 560,
+   "mean_depth_m": 1.905,
+   "world_xyz": [
+    9.011,
+    0.62,
+    2.298
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 360,
+   "held": false,
+   "bbox_xywh": [
+    1079,
+    0,
+    46,
+    23
+   ],
+   "visible_pixels": 541,
+   "mean_depth_m": 1.534,
+   "world_xyz": [
+    9.539,
+    1.76,
+    2.324
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 560,
+   "held": false,
+   "bbox_xywh": [
+    1043,
+    451,
+    15,
+    45
+   ],
+   "visible_pixels": 538,
+   "mean_depth_m": 1.57,
+   "world_xyz": [
+    9.7,
+    0.62,
+    2.305
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 241,
+   "held": false,
+   "bbox_xywh": [
+    1075,
+    555,
+    44,
+    21
+   ],
+   "visible_pixels": 531,
+   "mean_depth_m": 2.081,
+   "world_xyz": [
+    9.035,
+    0.12,
+    2.447
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 546,
+   "held": false,
+   "bbox_xywh": [
+    1136,
+    432,
+    32,
+    39
+   ],
+   "visible_pixels": 496,
+   "mean_depth_m": 1.862,
+   "world_xyz": [
+    9.102,
+    0.62,
+    2.3
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 538,
+   "held": false,
+   "bbox_xywh": [
+    1188,
+    424,
+    29,
+    35
+   ],
+   "visible_pixels": 476,
+   "mean_depth_m": 2.034,
+   "world_xyz": [
+    8.754,
+    0.62,
+    2.301
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 579,
+   "held": false,
+   "bbox_xywh": [
+    729,
+    483,
+    38,
+    17
+   ],
+   "visible_pixels": 476,
+   "mean_depth_m": 1.216,
+   "world_xyz": [
+    10.583,
+    0.62,
+    2.385
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 239,
+   "held": false,
+   "bbox_xywh": [
+    1094,
+    549,
+    44,
+    18
+   ],
+   "visible_pixels": 456,
+   "mean_depth_m": 2.139,
+   "world_xyz": [
+    8.914,
+    0.12,
+    2.445
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 237,
+   "held": false,
+   "bbox_xywh": [
+    1112,
+    544,
+    43,
+    17
+   ],
+   "visible_pixels": 432,
+   "mean_depth_m": 2.202,
+   "world_xyz": [
+    8.788,
+    0.12,
+    2.447
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 540,
+   "held": false,
+   "bbox_xywh": [
+    1174,
+    426,
+    29,
+    36
+   ],
+   "visible_pixels": 430,
+   "mean_depth_m": 1.991,
+   "world_xyz": [
+    8.846,
+    0.62,
+    2.304
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 577,
+   "held": false,
+   "bbox_xywh": [
+    760,
+    479,
+    38,
+    16
+   ],
+   "visible_pixels": 413,
+   "mean_depth_m": 1.253,
+   "world_xyz": [
+    10.504,
+    0.62,
+    2.383
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 235,
+   "held": false,
+   "bbox_xywh": [
+    1129,
+    538,
+    42,
+    17
+   ],
+   "visible_pixels": 403,
+   "mean_depth_m": 2.266,
+   "world_xyz": [
+    8.661,
+    0.12,
+    2.448
+   ]
+  },
+  {
+   "sku": "AL-011",
+   "class_id": 11,
+   "brand": "NutHouse",
+   "name": "Smooth Peanut Butter",
+   "category": "breakfast",
+   "barcode_ean13": "2000310871091",
+   "price_myr": 11.9,
+   "size": "462 g",
+   "instance": 97,
+   "held": false,
+   "bbox_xywh": [
+    450,
+    1,
+    14,
+    34
+   ],
+   "visible_pixels": 395,
+   "mean_depth_m": 0.897,
+   "world_xyz": [
+    11.085,
+    1.38,
+    2.406
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 575,
+   "held": false,
+   "bbox_xywh": [
+    791,
+    474,
+    37,
+    15
+   ],
+   "visible_pixels": 386,
+   "mean_depth_m": 1.296,
+   "world_xyz": [
+    10.418,
+    0.62,
+    2.385
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 233,
+   "held": false,
+   "bbox_xywh": [
+    1145,
+    533,
+    42,
+    21
+   ],
+   "visible_pixels": 384,
+   "mean_depth_m": 2.328,
+   "world_xyz": [
+    8.53,
+    0.12,
+    2.447
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 542,
+   "held": false,
+   "bbox_xywh": [
+    1160,
+    428,
+    32,
+    37
+   ],
+   "visible_pixels": 377,
+   "mean_depth_m": 1.955,
+   "world_xyz": [
+    8.925,
+    0.62,
+    2.306
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 573,
+   "held": false,
+   "bbox_xywh": [
+    821,
+    470,
+    37,
+    13
+   ],
+   "visible_pixels": 354,
+   "mean_depth_m": 1.338,
+   "world_xyz": [
+    10.331,
+    0.62,
+    2.383
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 536,
+   "held": false,
+   "bbox_xywh": [
+    1196,
+    423,
+    30,
+    34
+   ],
+   "visible_pixels": 347,
+   "mean_depth_m": 2.076,
+   "world_xyz": [
+    8.672,
+    0.62,
+    2.303
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 408,
+   "held": false,
+   "bbox_xywh": [
+    1255,
+    538,
+    25,
+    31
+   ],
+   "visible_pixels": 338,
+   "mean_depth_m": 2.435,
+   "world_xyz": [
+    8.045,
+    0.12,
+    2.299
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 571,
+   "held": false,
+   "bbox_xywh": [
+    847,
+    465,
+    36,
+    13
+   ],
+   "visible_pixels": 322,
+   "mean_depth_m": 1.388,
+   "world_xyz": [
+    10.243,
+    0.62,
+    2.391
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 569,
+   "held": false,
+   "bbox_xywh": [
+    875,
+    461,
+    35,
+    13
+   ],
+   "visible_pixels": 309,
+   "mean_depth_m": 1.431,
+   "world_xyz": [
+    10.153,
+    0.62,
+    2.389
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 247,
+   "held": false,
+   "bbox_xywh": [
+    1036,
+    578,
+    20,
+    21
+   ],
+   "visible_pixels": 308,
+   "mean_depth_m": 1.876,
+   "world_xyz": [
+    9.417,
+    0.12,
+    2.447
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 567,
+   "held": false,
+   "bbox_xywh": [
+    899,
+    458,
+    34,
+    12
+   ],
+   "visible_pixels": 282,
+   "mean_depth_m": 1.472,
+   "world_xyz": [
+    10.069,
+    0.62,
+    2.39
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 410,
+   "held": false,
+   "bbox_xywh": [
+    1253,
+    541,
+    19,
+    32
+   ],
+   "visible_pixels": 268,
+   "mean_depth_m": 2.395,
+   "world_xyz": [
+    8.131,
+    0.12,
+    2.305
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 412,
+   "held": false,
+   "bbox_xywh": [
+    1252,
+    546,
+    12,
+    31
+   ],
+   "visible_pixels": 263,
+   "mean_depth_m": 2.347,
+   "world_xyz": [
+    8.218,
+    0.12,
+    2.301
+   ]
+  },
+  {
+   "sku": "AL-012",
+   "class_id": 12,
+   "brand": "Bee Garden",
+   "name": "Pure Honey",
+   "category": "breakfast",
+   "barcode_ean13": "2000310950284",
+   "price_myr": 18.9,
+   "size": "500 g",
+   "instance": 228,
+   "held": false,
+   "bbox_xywh": [
+    315,
+    0,
+    46,
+    11
+   ],
+   "visible_pixels": 255,
+   "mean_depth_m": 0.86,
+   "world_xyz": [
+    11.28,
+    1.38,
+    2.456
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 565,
+   "held": false,
+   "bbox_xywh": [
+    922,
+    455,
+    34,
+    11
+   ],
+   "visible_pixels": 251,
+   "mean_depth_m": 1.513,
+   "world_xyz": [
+    9.985,
+    0.62,
+    2.388
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 530,
+   "held": false,
+   "bbox_xywh": [
+    1265,
+    415,
+    12,
+    30
+   ],
+   "visible_pixels": 247,
+   "mean_depth_m": 2.296,
+   "world_xyz": [
+    8.22,
+    0.62,
+    2.303
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 563,
+   "held": false,
+   "bbox_xywh": [
+    945,
+    451,
+    34,
+    14
+   ],
+   "visible_pixels": 244,
+   "mean_depth_m": 1.557,
+   "world_xyz": [
+    9.894,
+    0.62,
+    2.388
+   ]
+  },
+  {
+   "sku": "AL-007",
+   "class_id": 7,
+   "brand": "Sunrise",
+   "name": "Rolled Oats",
+   "category": "breakfast",
+   "barcode_ean13": "2000310554338",
+   "price_myr": 12.9,
+   "size": "1 kg",
+   "instance": 261,
+   "held": false,
+   "bbox_xywh": [
+    1273,
+    279,
+    7,
+    62
+   ],
+   "visible_pixels": 229,
+   "mean_depth_m": 2.232,
+   "world_xyz": [
+    8.189,
+    1,
+    2.293
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 713,
+   "held": false,
+   "bbox_xywh": [
+    212,
+    268,
+    10,
+    82
+   ],
+   "visible_pixels": 187,
+   "mean_depth_m": 0.781,
+   "world_xyz": [
+    11.471,
+    1,
+    2.386
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 553,
+   "held": false,
+   "bbox_xywh": [
+    1061,
+    435,
+    31,
+    9
+   ],
+   "visible_pixels": 154,
+   "mean_depth_m": 1.82,
+   "world_xyz": [
+    9.356,
+    0.62,
+    2.385
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 535,
+   "held": false,
+   "bbox_xywh": [
+    1186,
+    416,
+    28,
+    9
+   ],
+   "visible_pixels": 149,
+   "mean_depth_m": 2.249,
+   "world_xyz": [
+    8.496,
+    0.62,
+    2.39
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 528,
+   "held": false,
+   "bbox_xywh": [
+    1266,
+    413,
+    14,
+    30
+   ],
+   "visible_pixels": 147,
+   "mean_depth_m": 2.341,
+   "world_xyz": [
+    8.132,
+    0.62,
+    2.301
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 555,
+   "held": false,
+   "bbox_xywh": [
+    1046,
+    437,
+    29,
+    10
+   ],
+   "visible_pixels": 140,
+   "mean_depth_m": 1.775,
+   "world_xyz": [
+    9.447,
+    0.62,
+    2.385
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 551,
+   "held": false,
+   "bbox_xywh": [
+    1077,
+    433,
+    30,
+    9
+   ],
+   "visible_pixels": 134,
+   "mean_depth_m": 1.861,
+   "world_xyz": [
+    9.269,
+    0.62,
+    2.384
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 717,
+   "held": false,
+   "bbox_xywh": [
+    8,
+    256,
+    16,
+    96
+   ],
+   "visible_pixels": 131,
+   "mean_depth_m": 0.675,
+   "world_xyz": [
+    11.642,
+    1,
+    2.385
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 549,
+   "held": false,
+   "bbox_xywh": [
+    1091,
+    431,
+    30,
+    7
+   ],
+   "visible_pixels": 120,
+   "mean_depth_m": 1.906,
+   "world_xyz": [
+    9.182,
+    0.62,
+    2.386
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 545,
+   "held": false,
+   "bbox_xywh": [
+    1118,
+    427,
+    29,
+    8
+   ],
+   "visible_pixels": 119,
+   "mean_depth_m": 1.989,
+   "world_xyz": [
+    9.013,
+    0.62,
+    2.387
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 414,
+   "held": false,
+   "bbox_xywh": [
+    1249,
+    552,
+    6,
+    30
+   ],
+   "visible_pixels": 118,
+   "mean_depth_m": 2.303,
+   "world_xyz": [
+    8.305,
+    0.12,
+    2.3
+   ]
+  },
+  {
+   "sku": "AL-013",
+   "class_id": 13,
+   "brand": "Alpine Vale",
+   "name": "Muesli Fruit & Nut",
+   "category": "breakfast",
+   "barcode_ean13": "2000311029477",
+   "price_myr": 21.9,
+   "size": "750 g",
+   "instance": 152,
+   "held": false,
+   "bbox_xywh": [
+    0,
+    406,
+    11,
+    11
+   ],
+   "visible_pixels": 113,
+   "mean_depth_m": 0.862,
+   "world_xyz": [
+    11.8,
+    0.62,
+    2.593
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 547,
+   "held": false,
+   "bbox_xywh": [
+    1103,
+    428,
+    29,
+    9
+   ],
+   "visible_pixels": 112,
+   "mean_depth_m": 1.95,
+   "world_xyz": [
+    9.099,
+    0.62,
+    2.391
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 403,
+   "held": false,
+   "bbox_xywh": [
+    1255,
+    523,
+    21,
+    11
+   ],
+   "visible_pixels": 112,
+   "mean_depth_m": 2.641,
+   "world_xyz": [
+    7.785,
+    0.12,
+    2.384
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 543,
+   "held": false,
+   "bbox_xywh": [
+    1132,
+    425,
+    29,
+    8
+   ],
+   "visible_pixels": 110,
+   "mean_depth_m": 2.03,
+   "world_xyz": [
+    8.925,
+    0.62,
+    2.384
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 401,
+   "held": false,
+   "bbox_xywh": [
+    1258,
+    520,
+    22,
+    11
+   ],
+   "visible_pixels": 99,
+   "mean_depth_m": 2.689,
+   "world_xyz": [
+    7.703,
+    0.12,
+    2.385
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 532,
+   "held": false,
+   "bbox_xywh": [
+    1263,
+    418,
+    5,
+    29
+   ],
+   "visible_pixels": 94,
+   "mean_depth_m": 2.255,
+   "world_xyz": [
+    8.305,
+    0.62,
+    2.303
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 537,
+   "held": false,
+   "bbox_xywh": [
+    1169,
+    420,
+    26,
+    7
+   ],
+   "visible_pixels": 90,
+   "mean_depth_m": 2.158,
+   "world_xyz": [
+    8.668,
+    0.62,
+    2.385
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 405,
+   "held": false,
+   "bbox_xywh": [
+    1254,
+    526,
+    14,
+    12
+   ],
+   "visible_pixels": 90,
+   "mean_depth_m": 2.592,
+   "world_xyz": [
+    7.874,
+    0.12,
+    2.384
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 406,
+   "held": false,
+   "bbox_xywh": [
+    1260,
+    534,
+    20,
+    7
+   ],
+   "visible_pixels": 89,
+   "mean_depth_m": 2.501,
+   "world_xyz": [
+    7.959,
+    0.12,
+    2.305
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 539,
+   "held": false,
+   "bbox_xywh": [
+    1156,
+    421,
+    26,
+    7
+   ],
+   "visible_pixels": 88,
+   "mean_depth_m": 2.116,
+   "world_xyz": [
+    8.758,
+    0.62,
+    2.388
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 541,
+   "held": false,
+   "bbox_xywh": [
+    1142,
+    423,
+    29,
+    6
+   ],
+   "visible_pixels": 85,
+   "mean_depth_m": 2.079,
+   "world_xyz": [
+    8.841,
+    0.62,
+    2.39
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 711,
+   "held": false,
+   "bbox_xywh": [
+    222,
+    268,
+    8,
+    82
+   ],
+   "visible_pixels": 75,
+   "mean_depth_m": 0.781,
+   "world_xyz": [
+    11.388,
+    1,
+    2.384
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 557,
+   "held": false,
+   "bbox_xywh": [
+    1046,
+    440,
+    12,
+    8
+   ],
+   "visible_pixels": 72,
+   "mean_depth_m": 1.729,
+   "world_xyz": [
+    9.529,
+    0.62,
+    2.388
+   ]
+  },
+  {
+   "sku": "AL-014",
+   "class_id": 14,
+   "brand": "Kiddo",
+   "name": "Choco Malt Drink",
+   "category": "breakfast",
+   "barcode_ean13": "2000311108660",
+   "price_myr": 24.9,
+   "size": "1 kg",
+   "instance": 273,
+   "held": false,
+   "bbox_xywh": [
+    335,
+    797,
+    31,
+    3
+   ],
+   "visible_pixels": 65,
+   "mean_depth_m": 1.02,
+   "world_xyz": [
+    11.333,
+    0.12,
+    2.445
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 525,
+   "held": false,
+   "bbox_xywh": [
+    1266,
+    407,
+    14,
+    6
+   ],
+   "visible_pixels": 58,
+   "mean_depth_m": 2.545,
+   "world_xyz": [
+    7.871,
+    0.62,
+    2.387
+   ]
+  },
+  {
+   "sku": "AL-010",
+   "class_id": 10,
+   "brand": "Lembah",
+   "name": "Kaya Spread",
+   "category": "breakfast",
+   "barcode_ean13": "2000310791900",
+   "price_myr": 8.4,
+   "size": "400 g",
+   "instance": 399,
+   "held": false,
+   "bbox_xywh": [
+    1264,
+    517,
+    16,
+    5
+   ],
+   "visible_pixels": 57,
+   "mean_depth_m": 2.744,
+   "world_xyz": [
+    7.617,
+    0.12,
+    2.39
+   ]
+  },
+  {
+   "sku": "AL-011",
+   "class_id": 11,
+   "brand": "NutHouse",
+   "name": "Smooth Peanut Butter",
+   "category": "breakfast",
+   "barcode_ean13": "2000310871091",
+   "price_myr": 11.9,
+   "size": "462 g",
+   "instance": 95,
+   "held": false,
+   "bbox_xywh": [
+    533,
+    17,
+    2,
+    35
+   ],
+   "visible_pixels": 44,
+   "mean_depth_m": 0.935,
+   "world_xyz": [
+    10.987,
+    1.38,
+    2.403
+   ]
+  }
+ ],
+ "pose_sampled": {
+  "x": 11.366197455348448,
+  "z": 1.4358183738775552,
+  "yaw": 2.624411256732889,
+  "pitch": -0.10075896366033704,
+  "eye": 1.0168053598026745,
+  "face": "breakfast"
+ }
+}
