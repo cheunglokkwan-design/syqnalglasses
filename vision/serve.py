@@ -11,7 +11,7 @@ DELETE /basket  {"sku": "AL-011"}                      remove one
 GET  /basket    running total
 GET  /health    which models are loaded
 
-Only listens on 127.0.0.1. In the 3D store, press V ("Ask AisleLens") to send the current camera frame here.
+Listens on 127.0.0.1 unless --lan. The phone app is served at /app/. In the 3D store, press V ("Ask AisleLens") to send the current camera frame here.
 """
 from __future__ import annotations
 
@@ -38,7 +38,23 @@ from aislelens_vision.pipeline import Accept, Pipeline  # noqa: E402
 from aislelens_vision.verdict import Basket, Profile  # noqa: E402
 
 
+CATALOGS = {  # --catalog real | sim: the catalogue, its embedding gallery and its product photos
+    "real": {"catalog": HERE / "data" / "real_catalog.json", "embedder": ROOT / "runs" / "embedder_real",
+             "photos": ROOT / "data" / "real" / "gallery", "head": False},
+    "sim": {"catalog": HERE / "data" / "catalog.json", "embedder": ROOT / "runs" / "embedder",
+            "photos": ROOT / "data" / "sim" / "test" / "gallery", "head": True},
+}
+
+
 def build_pipeline(a) -> tuple[Pipeline, dict]:
+    preset = CATALOGS.get(a.catalog)
+    if preset:
+        a.catalog, a.photos = str(preset["catalog"]), str(preset["photos"])
+        if a.embedder is None:
+            a.embedder = str(preset["embedder"])
+        if not preset["head"]:
+            a.no_head = True
+    a.embedder = a.embedder or str(ROOT / "runs" / "embedder")
     cat = Catalog.load(a.catalog)
     edir = Path(a.embedder)
     head = None if a.no_head else edir / "head.pt"
@@ -65,7 +81,8 @@ def build_pipeline(a) -> tuple[Pipeline, dict]:
             return [_det("product", 0.5, w * 0.3, h * 0.2, w * 0.7, h * 0.85)]
         det_name = "none (centre crop fallback; train one with tools/train_detector.py)"
     pipe = Pipeline(cat, det, emb, gal, tag_reader=TagReader(), accept=accept)
-    info = {"detector": det_name, "embedder": "DINOv2-small" + ("" if a.no_head else " + head"),
+    info = {"catalog_file": Path(a.catalog).name, "here_store": cat.here_store,
+            "detector": det_name, "embedder": "DINOv2-small" + ("" if a.no_head else " + head"),
             "gallery_skus": len(gal.uniq), "catalog": len(cat), "accept": accept.__dict__, "ocr": "RapidOCR (PaddleOCR models)",
             "barcode": "ZXing-C++"}
     return pipe, info
@@ -78,8 +95,10 @@ def decode_image(b64: str) -> Image.Image:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--port", type=int, default=8770)
-    ap.add_argument("--catalog", default=str(HERE / "data" / "catalog.json"))
-    ap.add_argument("--embedder", default=str(ROOT / "runs" / "embedder"))
+    ap.add_argument("--catalog", default="real", help="real (the 20 real products), sim (the 3D store), or a catalogue file")
+    ap.add_argument("--embedder", default=None, help="folder with gallery.npz (and head.pt)")
+    ap.add_argument("--photos", default=None, help="product photo folders (<photos>/<sku>/*.jpg), shown in the app")
+    ap.add_argument("--lan", action="store_true", help="listen on the local network (phone, Jetson), not only this computer")
     ap.add_argument("--no-head", action="store_true")
     ap.add_argument("--detector", default="auto",
                     help="RF-DETR checkpoints, comma separated; auto = the real product + tag models if trained, else the simulator model")
@@ -95,7 +114,42 @@ def main():
     lock = threading.Lock()
     print(f"Models loaded in {time.time() - t:.0f}s: {json.dumps(info)}")
 
+    photos = Path(a.photos) if a.photos else None
+    app_dir = ROOT / "app"
+
+    def photo_url(sku):
+        if photos and (photos / sku).is_dir() and any((photos / sku).iterdir()):
+            return f"/image/{sku}"
+        return None
+
+    def product_card(p, price=None, source=None):
+        nut = p.nutrition_per_100g() or {}
+        return {"sku": p.sku, "title": p.title, "size": p.size, "price_myr": price if price is not None else p.price_myr,
+                "price_source": source or pipe.catalog.here_store, "allergens": p.allergens,
+                "sugars_g": nut.get("sugars_g"), "image": photo_url(p.sku)}
+
+    def enrich(res):
+        it = res.get("item")
+        if it and it.get("sku"):
+            p = pipe.catalog.by_sku[it["sku"]]
+            it["image"] = photo_url(p.sku)
+            res["alternatives"] = [product_card(q) for q in pipe.catalog.alternatives(p)]
+        if it and it.get("top5"):
+            res["candidates"] = [{**product_card(pipe.catalog.by_sku[s]), "score": sc} for s, sc in it["top5"][:3]
+                                 if s in pipe.catalog.by_sku]
+        return res
+
     class H(BaseHTTPRequestHandler):
+        def _file(self, path: Path, ctype: str, cache: str = "max-age=300"):
+            data = path.read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", ctype)
+            self.send_header("Content-Length", str(len(data)))
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.send_header("Cache-Control", cache)
+            self.end_headers()
+            self.wfile.write(data)
+
         def _send(self, code, obj):
             body = json.dumps(obj, default=float).encode()
             self.send_response(code)
@@ -122,6 +176,19 @@ def main():
                 return self._send(200, {"ok": True, **info})
             if self.path == "/basket":
                 return self._send(200, basket.summary())
+            if self.path.startswith("/image/") and photos:
+                sku = self.path.split("/")[2].split("?")[0]
+                files = sorted((photos / sku).glob("*.jp*g")) if (photos / sku).is_dir() and "." not in sku else []
+                if files:
+                    return self._file(files[0], "image/jpeg")
+            if self.path == "/" or self.path.startswith("/app"):
+                # the phone app, served here too for testing on this computer (http://localhost:<port>/app/)
+                rel = self.path.split("?")[0][len("/app"):].lstrip("/") or "index.html"
+                f = (app_dir / rel).resolve()
+                if app_dir.resolve() in f.parents and f.is_file():
+                    ct = {".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".json": "application/json",
+                          ".svg": "image/svg+xml", ".png": "image/png"}.get(f.suffix, "application/octet-stream")
+                    return self._file(f, ct + ("; charset=utf-8" if ct.startswith("text") else ""), "no-cache")
             self._send(404, {"error": "not found"})
 
         def do_DELETE(self):
@@ -137,6 +204,18 @@ def main():
                     if not p:
                         return self._send(400, {"error": "unknown sku"})
                     return self._send(200, basket.add(p, float(req.get("price_myr", p.price_myr)), int(req.get("qty", 1))))
+                if self.path == "/verdict":  # the shopper tapped or said which product it is
+                    p = pipe.catalog.by_sku.get(req.get("sku", ""))
+                    if not p:
+                        return self._send(400, {"error": "unknown sku"})
+                    from aislelens_vision.verdict import verdict as make_verdict
+                    prof = req.get("profile") or {}
+                    v = make_verdict(p, p.price_myr, pipe.catalog.here_store, Profile(allergies=prof.get("allergies", [])),
+                                     basket_total=basket.total)
+                    res = {"mode": "confirmed", "item": {**product_card(p), "method": "confirmed by you", "confidence": 1.0},
+                           "verdict": v, "alternatives": [product_card(q) for q in pipe.catalog.alternatives(p)],
+                           "basket": basket.summary(), "timings_ms": {"total_ms": 0}}
+                    return self._send(200, res)
                 if self.path != "/analyze":
                     return self._send(404, {"error": "not found"})
                 img = decode_image(req["rgb"]).convert("RGB")
@@ -146,15 +225,16 @@ def main():
                     pipe.profile = Profile(allergies=prof.get("allergies", []), avoid_high_sugar=bool(prof.get("avoid_high_sugar")))
                     res = pipe.analyze(img, depth, basket_total=float(req.get("basket_total") or basket.total))
                 res["basket"] = basket.summary()
-                self._send(200, res)
+                self._send(200, enrich(res))
             except Exception as e:  # report, keep serving
                 self._send(500, {"error": f"{type(e).__name__}: {e}"})
 
         def log_message(self, fmt, *args):
             pass
 
-    srv = ThreadingHTTPServer(("127.0.0.1", a.port), H)
-    print(f"AisleLens vision server on http://127.0.0.1:{a.port}  (Ctrl+C to stop)")
+    host = "0.0.0.0" if a.lan else "127.0.0.1"
+    srv = ThreadingHTTPServer((host, a.port), H)
+    print(f"AisleLens vision server on http://{host}:{a.port}  app: http://localhost:{a.port}/app/  (Ctrl+C to stop)")
     try:
         srv.serve_forever()
     except KeyboardInterrupt:

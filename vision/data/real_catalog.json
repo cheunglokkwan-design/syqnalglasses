@@ -1,0 +1,715 @@
+{
+ "here_store": "Jaya Grocer",
+ "checked": "2026-11-16",
+ "products": [
+  {
+   "class_id": 1,
+   "sku": "RP-01",
+   "brand": "Nestlé",
+   "name": "Milo Activ-Go",
+   "category": "malted drinks",
+   "price_myr": 23.2,
+   "price_note": "Jaya Grocer online",
+   "barcode_ean13": "9556001004543",
+   "size": "1 kg",
+   "allergens": [
+    "Malt Barley",
+    "gluten",
+    "milk"
+   ],
+   "allergens_source": "Open Food Facts + usual for this product: check the pack",
+   "nutrition": {
+    "sugars_g": 40.6666666666667
+   },
+   "prices_elsewhere": [
+    {
+     "store": "Lotus's",
+     "kind": "store",
+     "price_myr": 18.49,
+     "age_days": 0,
+     "delivery_myr": 0.0,
+     "free_over_myr": null,
+     "listing": "MILO (SOFTPACK) 900G",
+     "promo": true
+    }
+   ],
+   "image": "RP-01/00.jpg",
+   "photos": 6,
+   "source": {
+    "prices": "vision/data/real_prices.json (16 Nov 2026)",
+    "product": "https://world.openfoodfacts.org/product/9556001004543",
+    "licence": "Open Food Facts: ODbL data, CC BY-SA photos"
+   }
+  },
+  {
+   "class_id": 2,
+   "sku": "RP-02",
+   "brand": "Maggi",
+   "name": "Kari instant noodles 5-pack",
+   "category": "instant noodles",
+   "price_myr": 5.79,
+   "price_note": "Jaya Grocer online",
+   "barcode_ean13": "9556001128836",
+   "size": "5 x 79 g",
+   "allergens": [
+    "gluten",
+    "soybeans"
+   ],
+   "allergens_source": "Open Food Facts + usual for this product: check the pack",
+   "nutrition": {
+    "sugars_g": 2.4
+   },
+   "prices_elsewhere": [
+    {
+     "store": "Lotus's",
+     "kind": "store",
+     "price_myr": 4.95,
+     "age_days": 0,
+     "delivery_myr": 0.0,
+     "free_over_myr": null,
+     "listing": "MAGGI 2 MIN NDL CURRY 5X79G (carton of 12, per 5-pack)",
+     "promo": false
+    }
+   ],
+   "image": "RP-02/00.jpg",
+   "photos": 5,
+   "source": {
+    "prices": "vision/data/real_prices.json (16 Nov 2026)",
+    "product": "https://world.openfoodfacts.org/product/9556001128836",
+    "licence": "Open Food Facts: ODbL data, CC BY-SA photos"
+   }
+  },
+  {
+   "class_id": 3,
+   "sku": "RP-03",
+   "brand": "Dutch Lady",
+   "name": "Pure Farm full cream milk",
+   "category": "milk",
+   "price_myr": 7.69,
+   "price_note": "Jaya Grocer online promo",
+   "barcode_ean13": "9556166058191",
+   "size": "1 L",
+   "allergens": [
+    "milk"
+   ],
+   "allergens_source": "Open Food Facts + usual for this product: check the pack",
+   "nutrition": {
+    "sugars_g": 5
+   },
+   "prices_elsewhere": [
+    {
+     "store": "Lotus's",
+     "kind": "store",
+     "price_myr": 7.65,
+     "age_days": 0,
+     "delivery_myr": 0.0,
+     "free_over_myr": null,
+     "listing": "DUTCH LADY FULL CREAM MILK 1L",
+     "promo": true
+    }
+   ],
+   "image": "RP-03/00.jpg",
+   "photos": 6,
+   "source": {
+    "prices": "vision/data/real_prices.json (16 Nov 2026)",
+    "product": "https://world.openfoodfacts.org/product/9556166058191",
+    "licence": "Open Food Facts: ODbL data, CC BY-SA photos"
+   }
+  },
+  {
+   "class_id": 4,
+   "sku": "RP-04",
+   "brand": "Gardenia",
+   "name": "Original Classic white bread",
+   "category": "bread",
+   "price_myr": 4.3,
+   "price_note": "Jaya Grocer online",
+   "barcode_ean13": "9556231110045",
+   "size": "400 g",
+   "allergens": [
+    "gluten",
+    "milk",
+    "soybeans"
+   ],
+   "allergens_source": "Open Food Facts + usual for this product: check the pack",
+   "nutrition": null,
+   "prices_elsewhere": [
+    {
+     "store": "Lotus's",
+     "kind": "store",
+     "price_myr": 4.3,
+     "age_days": 0,
+     "delivery_myr": 0.0,
+     "free_over_myr": null,
+     "listing": "GARDENIA ORIGINAL CLASSIC JUMBO (600G)",
+     "promo": false
+    }
+   ],
+   "image": "RP-04/00.jpg",
+   "photos": 6,
+   "source": {
+    "prices": "vision/data/real_prices.json (16 Nov 2026)",
+    "product": "https://world.openfoodfacts.org/product/9556231110045",
+    "licence": "Open Food Facts: ODbL data, CC BY-SA photos"
+   }
+  },
+  {
+   "class_id": 5,
+   "sku": "RP-05",
+   "brand": "Nescafé",
+   "name": "Classic coffee jar",
+   "category": "coffee",
+   "price_myr": 34.9,
+   "price_note": "Jaya Grocer online",
+   "barcode_ean13": "",
+   "size": "200 g",
+   "allergens": [],
+   "allergens_source": "Open Food Facts + usual for this product: check the pack",
+   "nutrition": null,
+   "prices_elsewhere": [
+    {
+     "store": "Lotus's",
+     "kind": "store",
+     "price_myr": 28.5,
+     "age_days": 0,
+     "delivery_myr": 0.0,
+     "free_over_myr": null,
+     "listing": "NESCAFE CLASSIC JAR 200G",
+     "promo": false
+    }
+   ],
+   "image": null,
+   "photos": 0,
+   "source": {
+    "prices": "vision/data/real_prices.json (16 Nov 2026)",
+    "product": null,
+    "licence": null
+   }
+  },
+  {
+   "class_id": 6,
+   "sku": "RP-06",
+   "brand": "Julie's",
+   "name": "Peanut Butter Sandwich",
+   "category": "biscuits",
+   "price_myr": 8.99,
+   "price_note": "Jaya Grocer online promo",
+   "barcode_ean13": "9556121027156",
+   "size": "",
+   "allergens": [
+    "gluten",
+    "milk",
+    "peanuts"
+   ],
+   "allergens_source": "Open Food Facts + usual for this product: check the pack",
+   "nutrition": {
+    "sugars_g": 6
+   },
+   "prices_elsewhere": [
+    {
+     "store": "Lotus's",
+     "kind": "store",
+     "price_myr": 8.29,
+     "age_days": 0,
+     "delivery_myr": 0.0,
+     "free_over_myr": null,
+     "listing": "JULIE S P.BUTTER SANDWICH 360G",
+     "promo": true
+    }
+   ],
+   "image": "RP-06/00.jpg",
+   "photos": 1,
+   "source": {
+    "prices": "vision/data/real_prices.json (16 Nov 2026)",
+    "product": "https://world.openfoodfacts.org/product/9556121027156",
+    "licence": "Open Food Facts: ODbL data, CC BY-SA photos"
+   }
+  },
+  {
+   "class_id": 7,
+   "sku": "RP-07",
+   "brand": "Mamee",
+   "name": "Monster snack multipack",
+   "category": "snacks",
+   "price_myr": 5.2,
+   "price_note": "Jaya Grocer online",
+   "barcode_ean13": "9555022309194",
+   "size": "",
+   "allergens": [
+    "gluten"
+   ],
+   "allergens_source": "Open Food Facts + usual for this product: check the pack",
+   "nutrition": {
+    "sugars_g": 62
+   },
+   "prices_elsewhere": [
+    {
+     "store": "Lotus's",
+     "kind": "store",
+     "price_myr": 3.75,
+     "age_days": 0,
+     "delivery_myr": 0.0,
+     "free_over_myr": null,
+     "listing": "MAMEE MONSTER FAMILY PACK CHICKEN 10X20G",
+     "promo": true
+    }
+   ],
+   "image": "RP-07/00.jpg",
+   "photos": 2,
+   "source": {
+    "prices": "vision/data/real_prices.json (16 Nov 2026)",
+    "product": "https://world.openfoodfacts.org/product/9555022309194",
+    "licence": "Open Food Facts: ODbL data, CC BY-SA photos"
+   }
+  },
+  {
+   "class_id": 8,
+   "sku": "RP-08",
+   "brand": "Yeo's",
+   "name": "Soy bean drink",
+   "category": "soy and plant drinks",
+   "price_myr": 3.5,
+   "price_note": "Jaya Grocer online",
+   "barcode_ean13": "9556156040007",
+   "size": "1 L",
+   "allergens": [
+    "soy",
+    "soybeans"
+   ],
+   "allergens_source": "Open Food Facts + usual for this product: check the pack",
+   "nutrition": {
+    "sugars_g": 5
+   },
+   "prices_elsewhere": [
+    {
+     "store": "Lotus's",
+     "kind": "store",
+     "price_myr": 2.49,
+     "age_days": 0,
+     "delivery_myr": 0.0,
+     "free_over_myr": null,
+     "listing": "YEOS SOYA BEAN 1L",
+     "promo": true
+    }
+   ],
+   "image": "RP-08/00.jpg",
+   "photos": 6,
+   "source": {
+    "prices": "vision/data/real_prices.json (16 Nov 2026)",
+    "product": "https://world.openfoodfacts.org/product/9556156040007",
+    "licence": "Open Food Facts: ODbL data, CC BY-SA photos"
+   }
+  },
+  {
+   "class_id": 9,
+   "sku": "RP-09",
+   "brand": "100PLUS",
+   "name": "Isotonic drink",
+   "category": "isotonic drinks",
+   "price_myr": 2.99,
+   "price_note": "Jaya Grocer online promo",
+   "barcode_ean13": "",
+   "size": "1.5 L",
+   "allergens": [],
+   "allergens_source": "Open Food Facts + usual for this product: check the pack",
+   "nutrition": null,
+   "prices_elsewhere": [
+    {
+     "store": "Lotus's",
+     "kind": "store",
+     "price_myr": 3.59,
+     "age_days": 0,
+     "delivery_myr": 0.0,
+     "free_over_myr": null,
+     "listing": "100 PLUS ISOTONIC 1.5L",
+     "promo": true
+    }
+   ],
+   "image": null,
+   "photos": 0,
+   "source": {
+    "prices": "vision/data/real_prices.json (16 Nov 2026)",
+    "product": null,
+    "licence": null
+   }
+  },
+  {
+   "class_id": 10,
+   "sku": "RP-10",
+   "brand": "Ayam Brand",
+   "name": "Sardines in tomato sauce",
+   "category": "canned fish",
+   "price_myr": 10.45,
+   "price_note": "Jaya Grocer online",
+   "barcode_ean13": "9556041601221",
+   "size": "425 g",
+   "allergens": [
+    "fish"
+   ],
+   "allergens_source": "Open Food Facts + usual for this product: check the pack",
+   "nutrition": {
+    "sugars_g": 1.8
+   },
+   "prices_elsewhere": [
+    {
+     "store": "Lotus's",
+     "kind": "store",
+     "price_myr": 10.65,
+     "age_days": 0,
+     "delivery_myr": 0.0,
+     "free_over_myr": null,
+     "listing": "AYAM BRAND SARDINES IN TMT SAUCE 425G",
+     "promo": false
+    }
+   ],
+   "image": "RP-10/00.jpg",
+   "photos": 6,
+   "source": {
+    "prices": "vision/data/real_prices.json (16 Nov 2026)",
+    "product": "https://world.openfoodfacts.org/product/9556041601221",
+    "licence": "Open Food Facts: ODbL data, CC BY-SA photos"
+   }
+  },
+  {
+   "class_id": 11,
+   "sku": "RP-11",
+   "brand": "Adabi",
+   "name": "Meat curry powder",
+   "category": "spices",
+   "price_myr": 6.9,
+   "price_note": "Jaya Grocer online",
+   "barcode_ean13": "",
+   "size": "250 g",
+   "allergens": [],
+   "allergens_source": "Open Food Facts + usual for this product: check the pack",
+   "nutrition": null,
+   "prices_elsewhere": [
+    {
+     "store": "Lotus's",
+     "kind": "store",
+     "price_myr": 5.55,
+     "age_days": 0,
+     "delivery_myr": 0.0,
+     "free_over_myr": null,
+     "listing": "ADABI KARI AYAM/DAGING 250G",
+     "promo": true
+    }
+   ],
+   "image": null,
+   "photos": 0,
+   "source": {
+    "prices": "vision/data/real_prices.json (16 Nov 2026)",
+    "product": null,
+    "licence": null
+   }
+  },
+  {
+   "class_id": 12,
+   "sku": "RP-12",
+   "brand": "Hup Seng",
+   "name": "Special Cream Crackers",
+   "category": "biscuits",
+   "price_myr": 4.9,
+   "price_note": "Jaya Grocer online",
+   "barcode_ean13": "",
+   "size": "428 g",
+   "allergens": [
+    "gluten"
+   ],
+   "allergens_source": "Open Food Facts + usual for this product: check the pack",
+   "nutrition": null,
+   "prices_elsewhere": [
+    {
+     "store": "Lotus's",
+     "kind": "store",
+     "price_myr": 4.49,
+     "age_days": 0,
+     "delivery_myr": 0.0,
+     "free_over_myr": null,
+     "listing": "HS PING PONG CREAM CREAKER 428G",
+     "promo": false
+    }
+   ],
+   "image": null,
+   "photos": 0,
+   "source": {
+    "prices": "vision/data/real_prices.json (16 Nov 2026)",
+    "product": null,
+    "licence": null
+   }
+  },
+  {
+   "class_id": 13,
+   "sku": "RP-13",
+   "brand": "Mister Potato",
+   "name": "Original crisps",
+   "category": "snacks",
+   "price_myr": 3.99,
+   "price_note": "Jaya Grocer online",
+   "barcode_ean13": "",
+   "size": "160 g",
+   "allergens": [],
+   "allergens_source": "Open Food Facts + usual for this product: check the pack",
+   "nutrition": null,
+   "prices_elsewhere": [
+    {
+     "store": "Lotus's",
+     "kind": "store",
+     "price_myr": 3.99,
+     "age_days": 0,
+     "delivery_myr": 0.0,
+     "free_over_myr": null,
+     "listing": "MISTER POTATO ORIG CRISP 125G",
+     "promo": true
+    }
+   ],
+   "image": null,
+   "photos": 0,
+   "source": {
+    "prices": "vision/data/real_prices.json (16 Nov 2026)",
+    "product": null,
+    "licence": null
+   }
+  },
+  {
+   "class_id": 14,
+   "sku": "RP-14",
+   "brand": "Nestlé",
+   "name": "Kit Kat 4-finger",
+   "category": "chocolate",
+   "price_myr": 3.6,
+   "price_note": "Jaya Grocer online",
+   "barcode_ean13": "",
+   "size": "",
+   "allergens": [
+    "gluten",
+    "milk",
+    "soy"
+   ],
+   "allergens_source": "Open Food Facts + usual for this product: check the pack",
+   "nutrition": null,
+   "prices_elsewhere": [],
+   "image": null,
+   "photos": 0,
+   "source": {
+    "prices": "vision/data/real_prices.json (16 Nov 2026)",
+    "product": null,
+    "licence": null
+   }
+  },
+  {
+   "class_id": 15,
+   "sku": "RP-15",
+   "brand": "Farm Fresh",
+   "name": "Full cream milk",
+   "category": "milk",
+   "price_myr": 6.9,
+   "price_note": "Jaya Grocer online",
+   "barcode_ean13": "",
+   "size": "1 L",
+   "allergens": [
+    "milk"
+   ],
+   "allergens_source": "Open Food Facts + usual for this product: check the pack",
+   "nutrition": null,
+   "prices_elsewhere": [
+    {
+     "store": "Lotus's",
+     "kind": "store",
+     "price_myr": 5.49,
+     "age_days": 0,
+     "delivery_myr": 0.0,
+     "free_over_myr": null,
+     "listing": "FARM FRESH FULL CREAM MILK UHT 1L",
+     "promo": true
+    }
+   ],
+   "image": null,
+   "photos": 0,
+   "source": {
+    "prices": "vision/data/real_prices.json (16 Nov 2026)",
+    "product": null,
+    "licence": null
+   }
+  },
+  {
+   "class_id": 16,
+   "sku": "RP-16",
+   "brand": "Nestlé",
+   "name": "Koko Krunch cereal",
+   "category": "cereal",
+   "price_myr": 12.9,
+   "price_note": "Jaya Grocer online",
+   "barcode_ean13": "",
+   "size": "330 g",
+   "allergens": [
+    "gluten",
+    "milk"
+   ],
+   "allergens_source": "Open Food Facts + usual for this product: check the pack",
+   "nutrition": null,
+   "prices_elsewhere": [
+    {
+     "store": "Lotus's",
+     "kind": "store",
+     "price_myr": 10.29,
+     "age_days": 0,
+     "delivery_myr": 0.0,
+     "free_over_myr": null,
+     "listing": "NESTLE KOKO KRUNCH 300G",
+     "promo": true
+    }
+   ],
+   "image": null,
+   "photos": 0,
+   "source": {
+    "prices": "vision/data/real_prices.json (16 Nov 2026)",
+    "product": null,
+    "licence": null
+   }
+  },
+  {
+   "class_id": 17,
+   "sku": "RP-17",
+   "brand": "Quaker",
+   "name": "Instant Oatmeal",
+   "category": "cereal",
+   "price_myr": 8.99,
+   "price_note": "Jaya Grocer online",
+   "barcode_ean13": "9556174815878",
+   "size": "800 g",
+   "allergens": [
+    "gluten"
+   ],
+   "allergens_source": "Open Food Facts + usual for this product: check the pack",
+   "nutrition": {
+    "sugars_g": 1.14285714285714
+   },
+   "prices_elsewhere": [
+    {
+     "store": "Lotus's",
+     "kind": "store",
+     "price_myr": 10.65,
+     "age_days": 0,
+     "delivery_myr": 0.0,
+     "free_over_myr": null,
+     "listing": "QUAKER INSTANT OATMEAL 1KG FOIL",
+     "promo": false
+    }
+   ],
+   "image": "RP-17/00.jpg",
+   "photos": 2,
+   "source": {
+    "prices": "vision/data/real_prices.json (16 Nov 2026)",
+    "product": "https://world.openfoodfacts.org/product/9556174815878",
+    "licence": "Open Food Facts: ODbL data, CC BY-SA photos"
+   }
+  },
+  {
+   "class_id": 18,
+   "sku": "RP-18",
+   "brand": "Lee Kum Kee",
+   "name": "Premium Oyster Sauce",
+   "category": "sauces",
+   "price_myr": 17.99,
+   "price_note": "Jaya Grocer online promo",
+   "barcode_ean13": "0078895129052",
+   "size": "510 g",
+   "allergens": [
+    "gluten",
+    "molluscs"
+   ],
+   "allergens_source": "Open Food Facts + usual for this product: check the pack",
+   "nutrition": null,
+   "prices_elsewhere": [
+    {
+     "store": "Lotus's",
+     "kind": "store",
+     "price_myr": 16.45,
+     "age_days": 0,
+     "delivery_myr": 0.0,
+     "free_over_myr": null,
+     "listing": "LKK PREMIUM OYSTER SAUCE 510G",
+     "promo": false
+    }
+   ],
+   "image": "RP-18/00.jpg",
+   "photos": 2,
+   "source": {
+    "prices": "vision/data/real_prices.json (16 Nov 2026)",
+    "product": "https://world.openfoodfacts.org/product/0078895129052",
+    "licence": "Open Food Facts: ODbL data, CC BY-SA photos"
+   }
+  },
+  {
+   "class_id": 19,
+   "sku": "RP-19",
+   "brand": "Knife",
+   "name": "Blended cooking oil",
+   "category": "cooking oil",
+   "price_myr": 15.9,
+   "price_note": "Jaya Grocer online",
+   "barcode_ean13": "",
+   "size": "2 kg",
+   "allergens": [],
+   "allergens_source": "Open Food Facts + usual for this product: check the pack",
+   "nutrition": null,
+   "prices_elsewhere": [
+    {
+     "store": "Lotus's",
+     "kind": "store",
+     "price_myr": 15.45,
+     "age_days": 0,
+     "delivery_myr": 0.0,
+     "free_over_myr": null,
+     "listing": "KNIFE COOKING OIL 2KG",
+     "promo": false
+    }
+   ],
+   "image": null,
+   "photos": 0,
+   "source": {
+    "prices": "vision/data/real_prices.json (16 Nov 2026)",
+    "product": null,
+    "licence": null
+   }
+  },
+  {
+   "class_id": 20,
+   "sku": "RP-20",
+   "brand": "Vitagen",
+   "name": "Cultured milk drink 5-pack",
+   "category": "cultured milk",
+   "price_myr": 5.3,
+   "price_note": "Jaya Grocer online",
+   "barcode_ean13": "9557305000118",
+   "size": "5 x 125 ml",
+   "allergens": [
+    "milk"
+   ],
+   "allergens_source": "Open Food Facts + usual for this product: check the pack",
+   "nutrition": {
+    "sugars_g": 6.32
+   },
+   "prices_elsewhere": [
+    {
+     "store": "Lotus's",
+     "kind": "store",
+     "price_myr": 5.59,
+     "age_days": 0,
+     "delivery_myr": 0.0,
+     "free_over_myr": null,
+     "listing": "VITAGEN LB 5X125ML",
+     "promo": false
+    }
+   ],
+   "image": null,
+   "photos": 0,
+   "source": {
+    "prices": "vision/data/real_prices.json (16 Nov 2026)",
+    "product": "https://world.openfoodfacts.org/product/9557305000118",
+    "licence": "Open Food Facts: ODbL data, CC BY-SA photos"
+   }
+  }
+ ]
+}

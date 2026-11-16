@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0f0d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<title>Syqnal Shopper</title>
+<style>
+/* One camera screen. Subtle mode keeps the view clean: a ring, one line of advice, photos only when they help.
+   Debug mode adds boxes, scores and timings for the team. */
+:root{
+  --ink:#f3f6f4; --mute:rgba(243,246,244,.66); --glass:rgba(12,16,14,.62); --glass-2:rgba(22,28,25,.82);
+  --line:rgba(255,255,255,.14); --good:#7bd88f; --warn:#ffc65c; --bad:#ff7a6e; --accent:#8fd3ff;
+  --r:18px; --ui:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; --mono:ui-monospace,"SF Mono",Consolas,monospace;
+  --safe-b:env(safe-area-inset-bottom,0px); --safe-t:env(safe-area-inset-top,0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%;background:#0b0f0d;color:var(--ink);font:15px/1.35 var(--ui);overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+#stage{position:fixed;inset:0;overflow:hidden}
+#video,#photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
+#photo{object-fit:contain;display:none}
+#overlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.glass{background:var(--glass);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);border:1px solid var(--line)}
+
+/* top bar */
+#top{position:fixed;left:12px;right:12px;top:calc(10px + var(--safe-t));display:flex;gap:8px;align-items:center;z-index:5}
+.pill{height:36px;padding:0 12px;border-radius:999px;display:inline-flex;align-items:center;gap:8px;font-size:13px}
+#status i{width:8px;height:8px;border-radius:50%;background:var(--warn);display:inline-block}
+#status.ok i{background:var(--good)} #status.off i{background:var(--bad)}
+#top .grow{flex:1}
+#cartChip b{font-variant-numeric:tabular-nums}
+
+/* reticle */
+#ring{position:fixed;left:50%;top:44%;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;
+  border:2px solid rgba(255,255,255,.55);box-shadow:0 0 0 1px rgba(0,0,0,.25);pointer-events:none;transition:transform .25s,border-color .25s}
+#ring.busy{animation:pulse 1s ease-in-out infinite;border-color:var(--accent)}
+@keyframes pulse{50%{transform:scale(.88)}}
+@media (prefers-reduced-motion:reduce){#ring.busy{animation:none}}
+
+/* the one line of advice */
+#advice{position:fixed;left:12px;right:12px;bottom:calc(92px + var(--safe-b));z-index:4;border-radius:var(--r);padding:12px 14px;
+  display:none;gap:10px;align-items:center}
+#advice.show{display:flex}
+#advice .txt{flex:1;min-width:0}
+#advice .h{font-weight:650;font-size:16px;text-wrap:balance}
+#advice .s{color:var(--mute);font-size:13px;margin-top:2px}
+#advice.good .h{color:var(--good)} #advice.alert .h{color:var(--bad)} #advice.ask .h{color:var(--warn)}
+#advice img{width:48px;height:48px;border-radius:10px;object-fit:cover;background:#222;flex:none}
+.act{height:36px;padding:0 14px;border-radius:999px;background:rgba(255,255,255,.12);font-weight:600;flex:none}
+.act.primary{background:var(--good);color:#0b1a10}
+
+/* "which one?" photo choices */
+#choices{position:fixed;left:12px;right:12px;bottom:calc(92px + var(--safe-b));z-index:4;border-radius:var(--r);padding:12px;display:none}
+#choices.show{display:block}
+#choices .q{font-weight:650;margin:0 2px 10px}
+#choices .row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.choice{border-radius:12px;overflow:hidden;background:var(--glass-2);border:1px solid var(--line);text-align:left}
+.choice img{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#1b201d}
+.choice span{display:block;padding:6px 8px;font-size:12px;line-height:1.25;min-height:3.2em}
+.choice .ph{aspect-ratio:1;display:grid;place-items:center;color:var(--mute);font-size:12px}
+
+/* bottom controls */
+#bottom{position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(14px + var(--safe-b));display:flex;justify-content:space-between;align-items:center;z-index:5}
+.round{width:56px;height:56px;border-radius:50%;display:grid;place-items:center}
+#scanBtn{width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,.92);color:#0b0f0d;font-weight:700;font-size:13px;box-shadow:0 4px 18px rgba(0,0,0,.35)}
+#micBtn.on{background:var(--bad)}
+svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* sheets */
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:8;max-height:78%;overflow:auto;border-radius:22px 22px 0 0;padding:14px 16px calc(18px + var(--safe-b));
+  background:var(--glass-2);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid var(--line);transform:translateY(105%);transition:transform .28s}
+.sheet.open{transform:none}
+.sheet .grab{width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.3);margin:0 auto 12px}
+.sheet h2{font-size:17px;margin:4px 0 10px;display:flex;justify-content:space-between;align-items:baseline}
+.sheet h3{font-size:13px;color:var(--mute);font-weight:600;margin:16px 0 6px;text-transform:uppercase;letter-spacing:.06em}
+.item{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.item img,.item .ph{width:44px;height:44px;border-radius:10px;object-fit:cover;background:#1b201d;flex:none}
+.item .t{flex:1;min-width:0}
+.item .t b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .t small{color:var(--mute)}
+.item .p{font-variant-numeric:tabular-nums;font-weight:600}
+.qty{display:flex;align-items:center;gap:6px}
+.qty button{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.12)}
+.total{display:flex;justify-content:space-between;font-weight:700;font-size:17px;padding:12px 0 2px}
+.lines div{padding:4px 0;color:var(--ink)}
+.lines .alert{color:var(--bad);font-weight:600}
+.cmp{width:100%;border-collapse:collapse;font-size:14px}
+.cmp td{padding:6px 0;border-bottom:1px solid var(--line)} .cmp td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.cmp tr.best td{color:var(--good);font-weight:600}
+label.field{display:block;margin:10px 0}
+label.field span{display:block;font-size:13px;color:var(--mute);margin-bottom:4px}
+input[type=text],input[type=number]{width:100%;height:40px;border-radius:10px;border:1px solid var(--line);background:rgba(0,0,0,.35);color:var(--ink);padding:0 10px;font:inherit}
+.seg{display:flex;background:rgba(0,0,0,.35);border-radius:12px;padding:3px}
+.seg button{flex:1;height:36px;border-radius:9px;font-weight:600;color:var(--mute)}
+.seg button[aria-pressed=true]{background:rgba(255,255,255,.14);color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--line);color:var(--mute)}
+.chips button[aria-pressed=true]{background:rgba(255,122,110,.18);border-color:var(--bad);color:var(--ink)}
+.toggle{display:flex;justify-content:space-between;align-items:center;padding:8px 0}
+.toggle input{width:22px;height:22px}
+#scrim{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:7;display:none}
+#scrim.show{display:block}
+
+/* debug panel */
+#debug{position:fixed;left:12px;top:calc(56px + var(--safe-t));z-index:4;border-radius:12px;padding:8px 10px;font:11.5px/1.4 var(--mono);max-width:min(360px,70vw);display:none;white-space:pre-wrap}
+body.debug #debug{display:block}
+
+/* start screen */
+#start{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:24px;background:radial-gradient(120% 80% at 50% 0%,#18352a 0%,#0b0f0d 60%)}
+#start .card{max-width:380px;display:grid;gap:14px}
+#start h1{font-size:28px;margin:0;line-height:1.1}
+#start p{margin:0;color:var(--mute)}
+#start .go{height:52px;border-radius:14px;background:var(--good);color:#0b1a10;font-weight:700;font-size:16px}
+#start .alt{height:44px;border-radius:14px;border:1px solid var(--line)}
+#toast{position:fixed;left:50%;top:calc(58px + var(--safe-t));transform:translateX(-50%);z-index:9;padding:8px 14px;border-radius:999px;font-size:13px;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap}
+#toast.show{opacity:1}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<div id="stage">
+  <video id="video" playsinline muted autoplay></video>
+  <img id="photo" alt="Photo being checked">
+  <canvas id="overlay"></canvas>
+</div>
+<div id="ring" aria-hidden="true"></div>
+
+<div id="top">
+  <button class="pill glass" id="status" aria-label="Connection to the vision server"><i></i><span>Connecting…</span></button>
+  <span class="grow"></span>
+  <button class="pill glass" id="cartChip" aria-label="Open cart"><span>Cart</span><b id="cartTotal">RM 0.00</b></button>
+  <button class="pill glass" id="setBtn" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+</div>
+<div id="debug" class="glass"></div>
+
+<div id="advice" class="glass" aria-live="polite">
+  <img id="advImg" alt="" hidden>
+  <div class="txt"><div class="h" id="advH"></div><div class="s" id="advS"></div></div>
+  <button class="act" id="moreBtn">More</button>
+  <button class="act primary" id="addBtn">Add</button>
+</div>
+<div id="choices" class="glass" aria-live="polite">
+  <div class="q" id="choiceQ">Which one is it?</div>
+  <div class="row" id="choiceRow"></div>
+</div>
+
+<div id="bottom">
+  <button class="round glass" id="photoBtn" aria-label="Check a photo instead"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-8 8"/></svg></button>
+  <button id="scanBtn" aria-label="Check this product">Check</button>
+  <button class="round glass" id="micBtn" aria-label="Hold to ask"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+</div>
+<input type="file" id="fileIn" accept="image/*" capture="environment" hidden>
+
+<div id="scrim"></div>
+<section class="sheet" id="detail" aria-label="Details"><div class="grab"></div><div id="detailBody"></div></section>
+<section class="sheet" id="cart" aria-label="Cart"><div class="grab"></div>
+  <h2><span>Cart</span><small id="cartCount" style="color:var(--mute)"></small></h2>
+  <div id="cartList"></div>
+  <div class="total"><span>Total</span><span id="cartSum">RM 0.00</span></div>
+  <div id="budgetLine" style="color:var(--mute);font-size:13px"></div>
+  <div style="display:flex;gap:8px;margin-top:12px"><button class="act" id="clearCart">Clear</button><span style="flex:1"></span><button class="act" id="readCart">Read it out</button></div>
+</section>
+<section class="sheet" id="settings" aria-label="Settings"><div class="grab"></div>
+  <h2>Settings</h2>
+  <label class="field"><span>View</span>
+    <div class="seg" id="modeSeg"><button data-m="subtle" aria-pressed="true">Subtle</button><button data-m="debug" aria-pressed="false">Debug: boxes and scores</button></div></label>
+  <label class="field"><span>Vision server address</span><input type="text" id="serverIn" placeholder="https://your-jetson-or-tunnel" autocomplete="off" spellcheck="false"></label>
+  <div class="toggle"><span>Speak answers</span><input type="checkbox" id="speakIn" checked></div>
+  <div class="toggle"><span>Check automatically when the camera is still</span><input type="checkbox" id="autoIn"></div>
+  <label class="field"><span>Budget for this trip (RM)</span><input type="number" id="budgetIn" min="0" step="1" placeholder="No budget"></label>
+  <label class="field"><span>Allergies</span><div class="chips" id="allergyChips"></div></label>
+  <p style="color:var(--mute);font-size:12px;margin-top:14px">Prices: Jaya Grocer online and Lotus's, checked 16 Nov 2026. Product data and photos: Open Food Facts contributors (ODbL, CC BY-SA). Allergens: check the pack.</p>
+</section>
+
+<div id="start"><div class="card">
+  <h1>Syqnal Shopper</h1>
+  <p>Point your camera at a product, or hold one up, and tap Check. You get one line: buy it, or what's better.</p>
+  <button class="go" id="goBtn">Start camera</button>
+  <button class="alt" id="goPhoto">Use a photo instead</button>
+  <p id="startErr" style="color:var(--bad)"></p>
+</div></div>
+<div id="toast" class="glass"></div>
+
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const store = {get(k, d){try{const v = localStorage.getItem('syq.' + k); return v == null ? d : JSON.parse(v)}catch(_){return d}},
+               set(k, v){try{localStorage.setItem('syq.' + k, JSON.stringify(v))}catch(_){}}};
+const ALLERGENS = ['peanuts', 'tree nuts', 'milk', 'gluten', 'soy', 'egg', 'fish', 'crustaceans', 'molluscs', 'sesame'];
+const S = {
+  server: new URLSearchParams(location.search).get('server') || store.get('server', '') || (location.pathname.startsWith('/app') ? location.origin : ''),
+  mode: store.get('mode', 'subtle'), speak: store.get('speak', true), auto: store.get('auto', false),
+  budget: store.get('budget', null), allergies: store.get('allergies', []), cart: store.get('cart', []),
+  last: null, busy: false, usingPhoto: false, lastScan: 0,
+};
+const fmt = v => 'RM ' + Number(v).toFixed(2);
+const esc = t => String(t ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const img = path => path ? (S.server.replace(/\/$/, '') + path) : '';
+function toast(t, ms = 2200){const el = $('toast'); el.textContent = t; el.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('show'), ms)}
+
+/* ---------- server ---------- */
+async function api(path, body){
+  if (!S.server) throw new Error('no server');
+  const r = await fetch(S.server.replace(/\/$/, '') + path, body ? {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)} : {});
+  if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || r.status);
+  return r.json();
+}
+async function ping(){
+  const el = $('status');
+  try{const h = await api('/health'); el.className = 'pill glass ok'; el.lastElementChild.textContent = h.here_store || 'Connected'; S.health = h}
+  catch(_){el.className = 'pill glass off'; el.lastElementChild.textContent = S.server ? 'Server offline' : 'Set server'}
+}
+
+/* ---------- camera ---------- */
+const video = $('video'), canvas = document.createElement('canvas');
+async function startCamera(){
+  $('startErr').textContent = '';
+  try{
+    const st = await navigator.mediaDevices.getUserMedia({video: {facingMode: {ideal: 'environment'}, width: {ideal: 1920}, height: {ideal: 1080}}, audio: false});
+    video.srcObject = st; await video.play(); usePhoto(false); $('start').hidden = true; speak('');
+  }catch(e){$('startErr').textContent = 'Camera not available here (' + (e.name || e.message) + '). Use a photo instead, or open the app over https.'}
+}
+function usePhoto(on){S.usingPhoto = on; $('photo').style.display = on ? 'block' : 'none'; video.style.display = on ? 'none' : 'block'}
+function grab(){
+  const src = S.usingPhoto ? $('photo') : video;
+  const w = S.usingPhoto ? src.naturalWidth : video.videoWidth, h = S.usingPhoto ? src.naturalHeight : video.videoHeight;
+  if (!w) return null;
+  const s = Math.min(1, 1280 / Math.max(w, h));
+  canvas.width = Math.round(w * s); canvas.height = Math.round(h * s);
+  canvas.getContext('2d').drawImage(src, 0, 0, canvas.width, canvas.height);
+  return canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
+}
+
+/* ---------- check a product ---------- */
+async function check(){
+  if (S.busy) return;
+  const rgb = grab(); if (!rgb){toast('Camera not ready'); return}
+  S.busy = true; S.lastScan = Date.now(); $('ring').classList.add('busy'); hideChoices();
+  try{
+    const res = await api('/analyze', {rgb, profile: {allergies: S.allergies}, basket_total: cartTotal()});
+    render(res);
+  }catch(e){showAdvice('ask', S.server ? 'Can’t reach the vision server' : 'Set the vision server address', 'Settings, then Vision server address', null)}
+  finally{S.busy = false; $('ring').classList.remove('busy')}
+}
+async function confirm(sku){
+  hideChoices();
+  try{render(await api('/verdict', {sku, profile: {allergies: S.allergies}}))}catch(_){toast('Server offline')}
+}
+
+/* ---------- render ---------- */
+function render(res){
+  S.last = res; drawDebug(res);
+  const it = res.item, v = res.verdict;
+  if (!it){showAdvice('', 'No product in view', 'Put the ring on a pack, or hold one up', null); return}
+  if (!it.sku){   // unsure: ask with photos instead of guessing
+    const c = (res.candidates || []).filter(x => x.title);
+    // far from every known product: say so instead of offering unrelated photos
+    if (it.status !== 'unknown_barcode' && (!c.length || (c[0].score ?? 1) < 0.4)){
+      showAdvice('ask', 'I don’t know this product yet', 'Show me the barcode, or try another angle', null); say('I don’t know this product yet'); return
+    }
+    if (c.length){showChoices(it.status === 'unknown_barcode' ? 'Barcode not in our list yet. Is it one of these?' : 'Which one is it?', c); say('Which one is it?'); return}
+    showAdvice('ask', v ? v.headline : 'Not sure', 'Turn the pack to show the barcode', null); return
+  }
+  const alerts = (v && v.alerts) || [], good = v && /^Good buy/.test(v.headline);
+  const sub = fmt(it.price_myr) + ' at ' + (it.price_source || 'this store') + (alerts.length && v.lines[1] ? ' · ' + v.lines[1] : '');
+  // show the product photo only when the visual match was not certain, so the shopper can catch a wrong guess
+  const unsureMatch = it.method === 'visual' && (it.confidence ?? 1) < 0.75;
+  showAdvice(alerts.length ? 'alert' : good ? 'good' : '', v ? v.headline : it.title, (unsureMatch ? 'Is this ' + it.title + '? ' : '') + sub, unsureMatch ? img(it.image) : null);
+  say(v ? v.headline : it.title);
+}
+function showAdvice(kind, h, s, photo){
+  const el = $('advice'); el.className = 'glass show ' + kind; $('advH').textContent = h; $('advS').textContent = s || '';
+  const im = $('advImg'); if (photo){im.src = photo; im.hidden = false; im.onerror = () => (im.hidden = true)} else im.hidden = true;
+  const has = S.last && S.last.item && S.last.item.sku; $('addBtn').hidden = !has; $('moreBtn').hidden = !has;
+}
+function showChoices(q, list){
+  $('advice').classList.remove('show'); $('choiceQ').textContent = q;
+  $('choiceRow').innerHTML = list.slice(0, 3).map(c => `<button class="choice" data-sku="${esc(c.sku)}">${c.image ? `<img src="${esc(img(c.image))}" alt="">` : '<div class="ph">No photo yet</div>'}<span>${esc(c.title)}</span></button>`).join('');
+  $('choices').classList.add('show');
+}
+function hideChoices(){$('choices').classList.remove('show')}
+$('choiceRow').onclick = e => {const b = e.target.closest('.choice'); if (b) confirm(b.dataset.sku)};
+
+/* ---------- details sheet ---------- */
+function openDetail(focus){
+  const r = S.last; if (!r || !r.item) return;
+  const it = r.item, v = r.verdict || {lines: [], alerts: []}, cmp = v.compare;
+  let h = `<h2><span>${esc(it.title || 'Product')}</span><span>${it.price_myr != null ? fmt(it.price_myr) : ''}</span></h2>`;
+  if (it.image) h += `<img src="${esc(img(it.image))}" alt="" style="width:96px;height:96px;object-fit:cover;border-radius:14px;float:right;margin-left:10px">`;
+  h += '<div class="lines">' + v.alerts.map(a => `<div class="alert">${esc(a)}</div>`).join('') + v.lines.slice(1).map(l => `<div>${esc(l)}</div>`).join('') + '</div>';
+  if (cmp && cmp.others && cmp.others.length){
+    h += '<h3 style="clear:both">Prices</h3><table class="cmp">' +
+      `<tr><td>Here (${esc(it.price_source || '')})</td><td>${fmt(cmp.here_myr)}</td></tr>` +
+      cmp.others.map(o => `<tr class="${cmp.cheapest && o.store === cmp.cheapest.store && cmp.saving_myr >= .1 ? 'best' : ''}"><td>${esc(o.store)}${o.promo ? ' (promo)' : ''}${o.stale ? ' · ' + o.age_days + ' days old' : ''}</td><td>${fmt(o.all_in_myr ?? o.price_myr)}</td></tr>`).join('') + '</table>';
+  }
+  const alts = (r.alternatives || []).slice();
+  if (focus === 'healthier') alts.sort((a, b) => (a.sugars_g ?? 99) - (b.sugars_g ?? 99));
+  if (alts.length){
+    h += `<h3>${focus === 'healthier' ? 'Less sugar' : 'Similar, cheapest first'}</h3>` + alts.map(a => `<div class="item">${a.image ? `<img src="${esc(img(a.image))}" alt="">` : '<div class="ph"></div>'}<div class="t"><b>${esc(a.title)}</b><small>${esc(a.size || '')}${a.sugars_g != null ? ' · sugar ' + a.sugars_g + ' g/100 g' : ''}</small></div><span class="p">${fmt(a.price_myr)}</span><button class="act" data-swap="${esc(a.sku)}">Pick</button></div>`).join('');
+  }
+  h += `<div style="display:flex;gap:8px;margin-top:14px"><span style="flex:1"></span><button class="act primary" id="detailAdd">Add to cart</button></div>`;
+  $('detailBody').innerHTML = h; openSheet('detail');
+  $('detailAdd').onclick = () => {addCurrent(); closeSheets()};
+}
+$('detailBody').onclick = e => {const b = e.target.closest('[data-swap]'); if (b){closeSheets(); confirm(b.dataset.swap)}};
+$('moreBtn').onclick = () => openDetail();
+
+/* ---------- cart (explicit: only "Add" or "add this" puts things in) ---------- */
+const cartTotal = () => S.cart.reduce((a, c) => a + c.price * c.qty, 0);
+function addCurrent(qty = 1){
+  const it = S.last && S.last.item; if (!it || !it.sku){toast('Check a product first'); return}
+  const ex = S.cart.find(c => c.sku === it.sku);
+  if (ex) ex.qty += qty; else S.cart.push({sku: it.sku, title: it.title, price: it.price_myr, image: it.image, qty});
+  saveCart(); say('Added ' + it.title + '. Total ' + fmt(cartTotal())); toast('Added · ' + fmt(cartTotal()));
+}
+function saveCart(){
+  store.set('cart', S.cart); $('cartTotal').textContent = fmt(cartTotal());
+  $('cartList').innerHTML = S.cart.length ? S.cart.map((c, i) => `<div class="item">${c.image ? `<img src="${esc(img(c.image))}" alt="">` : '<div class="ph"></div>'}<div class="t"><b>${esc(c.title)}</b><small>${fmt(c.price)} each</small></div><div class="qty"><button data-i="${i}" data-d="-1" aria-label="One fewer">−</button><span>${c.qty}</span><button data-i="${i}" data-d="1" aria-label="One more">+</button></div></div>`).join('') : '<p style="color:var(--mute)">Nothing yet. Check a product, then tap Add or say “add this”.</p>';
+  $('cartSum').textContent = fmt(cartTotal());
+  $('cartCount').textContent = S.cart.reduce((a, c) => a + c.qty, 0) + ' items';
+  $('budgetLine').textContent = S.budget ? (cartTotal() > S.budget ? 'Over budget by ' + fmt(cartTotal() - S.budget) : fmt(S.budget - cartTotal()) + ' left of ' + fmt(S.budget)) : '';
+}
+$('cartList').onclick = e => {const b = e.target.closest('[data-i]'); if (!b) return; const c = S.cart[+b.dataset.i]; c.qty += +b.dataset.d; if (c.qty <= 0) S.cart.splice(+b.dataset.i, 1); saveCart()};
+$('addBtn').onclick = () => addCurrent();
+$('clearCart').onclick = () => {S.cart = []; saveCart()};
+$('readCart').onclick = () => say(S.cart.length ? `${S.cart.reduce((a, c) => a + c.qty, 0)} items, total ${fmt(cartTotal())}` + (S.budget ? `, ${fmt(Math.max(0, S.budget - cartTotal()))} left` : '') : 'Your cart is empty');
+$('cartChip').onclick = () => openSheet('cart');
+
+/* ---------- voice: push to talk (simple commands until the LLM communicator is connected) ---------- */
+function say(t){
+  if (!S.speak || !('speechSynthesis' in window)) return;
+  speechSynthesis.cancel(); if (!t) return;
+  const u = new SpeechSynthesisUtterance(t.replace(/RM ?(\d+)\.(\d{2})/g, '$1 ringgit $2')); u.lang = 'en-GB'; u.rate = 1.05; speechSynthesis.speak(u);
+}
+const NUM = {one: 1, two: 2, three: 3, four: 4, five: 5, six: 6};
+function command(t){
+  t = t.toLowerCase();
+  let m;
+  if (/\b(add|take|buy)\b/.test(t)) return addCurrent();
+  if ((m = t.match(/make (?:it|that) (\w+)/))){const n = NUM[m[1]] || parseInt(m[1]); const it = S.last && S.last.item; const c = it && S.cart.find(x => x.sku === it.sku); if (c && n){c.qty = n; saveCart(); say('Now ' + n); return} return say('Add it first')}
+  if (/\b(remove|take out|put back)\b/.test(t)){const c = S.cart.pop(); saveCart(); return say(c ? 'Removed ' + c.title : 'Your cart is empty')}
+  if (/cheaper|swap/.test(t)){const a = S.last && (S.last.alternatives || [])[0]; return a ? (say('Cheapest similar: ' + a.title + ', ' + fmt(a.price_myr)), openDetail()) : say('Check a product first')}
+  if (/healthier|less sugar|sugar/.test(t)) return openDetail('healthier');
+  if (/show|picture|photo|option/.test(t)) return S.last && S.last.candidates && !S.last.item.sku ? showChoices('Which one is it?', S.last.candidates) : openDetail();
+  if (/total|cart|budget|how much/.test(t)) return $('readCart').onclick();
+  if (/check|what is this|what's this/.test(t)) return check();
+  say('I can check, add, remove, compare cheaper or healthier, and read the cart.');
+}
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null;
+$('micBtn').onpointerdown = () => {
+  if (!SR){toast('Voice not supported in this browser'); return}
+  rec = new SR(); rec.lang = 'en-MY'; rec.interimResults = false;
+  rec.onresult = e => {const t = e.results[0][0].transcript; toast('“' + t + '”'); command(t)};
+  rec.onend = () => $('micBtn').classList.remove('on');
+  $('micBtn').classList.add('on'); try{rec.start()}catch(_){}
+};
+$('micBtn').onpointerup = $('micBtn').onpointerleave = () => {if (rec) try{rec.stop()}catch(_){}};
+
+/* ---------- debug overlay ---------- */
+const ov = $('overlay');
+function drawDebug(res){
+  const dbg = document.body.classList.contains('debug'), ctx = ov.getContext('2d');
+  ov.width = innerWidth * devicePixelRatio; ov.height = innerHeight * devicePixelRatio; ctx.clearRect(0, 0, ov.width, ov.height);
+  if (!dbg || !res || !res.image_size){$('debug').textContent = ''; return}
+  const [iw, ih] = res.image_size, W = innerWidth, H = innerHeight;
+  const s = S.usingPhoto ? Math.min(W / iw, H / ih) : Math.max(W / iw, H / ih), ox = (W - iw * s) / 2, oy = (H - ih * s) / 2;
+  ctx.scale(devicePixelRatio, devicePixelRatio); ctx.lineWidth = 2; ctx.font = '12px ' + getComputedStyle(document.body).fontFamily;
+  const col = {product: '#7bd88f', price_tag: '#ffc65c', held_item: '#8fd3ff'};
+  for (const b of res.boxes || []){
+    const [x0, y0, x1, y1] = b.box; ctx.strokeStyle = col[b.label] || '#fff';
+    ctx.strokeRect(ox + x0 * s, oy + y0 * s, (x1 - x0) * s, (y1 - y0) * s);
+    const t = `${b.label} ${b.score.toFixed(2)}${b.depth_m ? ' ' + b.depth_m.toFixed(2) + 'm' : ''}`;
+    ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillRect(ox + x0 * s, oy + y0 * s - 16, ctx.measureText(t).width + 8, 16);
+    ctx.fillStyle = col[b.label] || '#fff'; ctx.fillText(t, ox + x0 * s + 4, oy + y0 * s - 4);
+  }
+  const it = res.item || {};
+  $('debug').textContent = [`mode ${res.mode} · ${res.detections ?? 0} boxes`, it.sku ? `${it.sku} ${it.title} via ${it.method} ${it.confidence ?? ''}` : (it.status ? 'item: ' + it.status : 'no item'),
+    it.top5 ? 'top: ' + it.top5.map(x => x[0] + ' ' + x[1]).join(', ') : '', 'ms ' + JSON.stringify(res.timings_ms || {})].filter(Boolean).join('\n');
+}
+
+/* ---------- steady-camera auto check ---------- */
+const tiny = document.createElement('canvas'); tiny.width = 32; tiny.height = 24; let prev = null, still = 0;
+setInterval(() => {
+  if (!S.auto || S.busy || S.usingPhoto || !video.videoWidth || document.querySelector('.sheet.open')) return;
+  const c = tiny.getContext('2d', {willReadFrequently: true}); c.drawImage(video, 0, 0, 32, 24);
+  const d = c.getImageData(0, 0, 32, 24).data; let diff = 0;
+  if (prev) for (let i = 0; i < d.length; i += 4) diff += Math.abs(d[i] - prev[i]) + Math.abs(d[i + 1] - prev[i + 1]);
+  prev = d.slice(); still = prev && diff / (32 * 24) < 6 ? still + 1 : 0;
+  if (still >= 4 && Date.now() - S.lastScan > 3500){still = 0; check()}
+}, 250);
+
+/* ---------- sheets and settings ---------- */
+function openSheet(id){closeSheets(); $(id).classList.add('open'); $('scrim').classList.add('show')}
+function closeSheets(){document.querySelectorAll('.sheet.open').forEach(s => s.classList.remove('open')); $('scrim').classList.remove('show')}
+$('scrim').onclick = closeSheets;
+document.querySelectorAll('.sheet .grab').forEach(g => g.onclick = closeSheets);
+$('setBtn').onclick = () => openSheet('settings');
+$('status').onclick = () => openSheet('settings');
+function applyMode(){document.body.classList.toggle('debug', S.mode === 'debug'); document.querySelectorAll('#modeSeg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.m === S.mode))); drawDebug(S.last)}
+$('modeSeg').onclick = e => {const b = e.target.closest('button'); if (b){S.mode = b.dataset.m; store.set('mode', S.mode); applyMode()}};
+$('serverIn').value = S.server;
+$('serverIn').onchange = e => {S.server = e.target.value.trim(); store.set('server', S.server); ping()};
+$('speakIn').checked = S.speak; $('speakIn').onchange = e => {S.speak = e.target.checked; store.set('speak', S.speak)};
+$('autoIn').checked = S.auto; $('autoIn').onchange = e => {S.auto = e.target.checked; store.set('auto', S.auto)};
+$('budgetIn').value = S.budget ?? ''; $('budgetIn').onchange = e => {S.budget = e.target.value ? +e.target.value : null; store.set('budget', S.budget); saveCart()};
+$('allergyChips').innerHTML = ALLERGENS.map(a => `<button data-a="${a}" aria-pressed="${S.allergies.includes(a)}">${a}</button>`).join('');
+$('allergyChips').onclick = e => {const b = e.target.closest('button'); if (!b) return; const a = b.dataset.a; S.allergies = S.allergies.includes(a) ? S.allergies.filter(x => x !== a) : [...S.allergies, a]; store.set('allergies', S.allergies); b.setAttribute('aria-pressed', String(S.allergies.includes(a)))};
+
+/* ---------- start, scan triggers ---------- */
+$('goBtn').onclick = startCamera;
+const pickPhoto = () => $('fileIn').click();
+$('goPhoto').onclick = () => {$('start').hidden = true; pickPhoto()};
+$('photoBtn').onclick = () => S.usingPhoto ? (usePhoto(false), video.srcObject ? 0 : startCamera()) : pickPhoto();
+$('fileIn').onchange = e => {const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => {$('photo').onload = () => {usePhoto(true); check()}; $('photo').src = r.result}; r.readAsDataURL(f); e.target.value = ''};
+$('scanBtn').onclick = check;
+$('stage').onclick = check;
+addEventListener('resize', () => drawDebug(S.last));
+applyMode(); saveCart(); ping(); setInterval(ping, 15000);
+window.syq = {S, check, command, render};  // for testing
+</script>
+</body>
+</html>

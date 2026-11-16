@@ -40,9 +40,12 @@ def _sal(q: str) -> list[dict]:
 
 def search(q: str) -> list[dict]:
     """Search (Malaysian listings first), then fetch full records for the top hits."""
-    hits = _sal(f'{q} countries_tags:"en:malaysia"') or _sal(q)
-    out = []
-    for h in hits[:4]:
+    hits = _sal(f'{q} countries_tags:"en:malaysia"')[:6] + _sal(q)[:6]
+    seen, out = set(), []
+    for h in hits:
+        if h["code"] in seen:
+            continue
+        seen.add(h["code"])
         try:
             r = json.loads(get(f"https://world.openfoodfacts.org/api/v2/product/{h['code']}.json?fields={FIELDS}"))
             if r.get("product"):
@@ -53,14 +56,29 @@ def search(q: str) -> list[dict]:
     return out
 
 
-def score(p: dict, brand: str) -> float:
-    s = 0.0
+def _norm(t: str) -> str:
+    import unicodedata
+    t = unicodedata.normalize("NFKD", t or "").encode("ascii", "ignore").decode().lower()
+    return "".join(c if c.isalnum() else " " for c in t)
+
+
+def score(p: dict, brand: str, name: str = "") -> float:
+    """Brand must match; then name words in common, Malaysia, photos. Below 0 = reject."""
+    b = _norm(brand).split()
+    pb = _norm(p.get("brands") or "") + " " + _norm(p.get("product_name") or "")
+    if not b or not any(w in pb.split() for w in b if len(w) > 2):
+        return -1.0
+    stop = {"the", "and", "pack", "with", "drink", "instant"}
+    want = {w for w in _norm(name).split() if len(w) > 2 and w not in stop}
+    have = set(_norm(p.get("product_name") or "").split())
+    overlap = len(want & have)
+    if want and overlap == 0:
+        return -1.0
+    s = 2.0 * overlap
     if "en:malaysia" in (p.get("countries_tags") or []):
-        s += 3
+        s += 2
     if p.get("image_front_url"):
-        s += 2
-    if brand.lower().replace("é", "e").split()[0] in (p.get("brands") or "").lower().replace("é", "e"):
-        s += 2
+        s += 1
     s += min(len(p.get("images") or {}), 10) * 0.1
     return s
 
@@ -104,7 +122,8 @@ def main():
             time.sleep(3)
             continue
         cands = [c for c in cands if c.get("code")]
-        best = max(cands, key=lambda c: score(c, it["brand"]), default=None)
+        ok = [c for c in cands if score(c, it["brand"], it["name"]) >= 0]
+        best = max(ok, key=lambda c: score(c, it["brand"], it["name"]), default=None)
         rec = {**it, "off": None}
         if best:
             n = best.get("nutriments") or {}

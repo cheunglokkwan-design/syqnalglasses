@@ -13,6 +13,7 @@ This repository holds the planning documents, the store simulators, and the firs
 | [docs/store-simulator-research.md](docs/store-simulator-research.md) | Survey of open-source store simulators (Sari Sandbox, MarketGen, RoboBenchMart, Isaac Sim) and why we built our own 3D store |
 | [prototypes/store-sim-3d/](prototypes/store-sim-3d/) | AisleLens Store 3D: first-person supermarket you walk and pick products in, with RealSense-style RGB-D frames and exact product labels, plus a headless dataset generator |
 | [vision/](vision/) | Vision pipeline: RF-DETR detector, DINOv2 product matching, barcode and price-tag reading, shopping verdict; training and scoring scripts; a local server the 3D store and a RealSense camera talk to |
+| [app/](app/) | Syqnal Shopper phone app (Vercel): camera, Subtle and Debug modes, cart, voice commands. Talks to `vision/serve.py` |
 | [docs/handover.md](docs/handover.md) | Where the work stands and what to do next |
 | [docs/real-world-plan.md](docs/real-world-plan.md) | Real-world plan: real datasets and licences, first 20 Malaysian products with prices, glasses choice, store pilot, milestones ([live doc](https://claude.ai/artifact/Pe4TGvhKj6T8Vd8ZaLSKf2)) |
 | [prototypes/aislelens-2d-simulator.html](prototypes/aislelens-2d-simulator.html) | AisleLens 2D store simulator. Open it in any browser to walk the scan, compare and verdict loop in a fictional store |

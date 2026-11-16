@@ -65,6 +65,11 @@ class Product:
     barcode_ean13: str
     size: str = ""
     allergens: list[str] = field(default_factory=list)
+    # real products: measured data instead of the simulator's formulas
+    nutrition: dict | None = None          # per 100 g, e.g. {"sugars_g": 12.0}
+    prices_elsewhere: list | None = None   # [{"store", "kind", "price_myr", "age_days", ...}]
+    image: str | None = None               # reference photo path, relative to the catalogue file
+    source: dict | None = None             # where the facts came from (attribution)
 
     @property
     def title(self) -> str:
@@ -76,7 +81,9 @@ class Product:
 
     def nutrition_per_100g(self) -> dict | None:
         """The numbers printed on the simulator's back panel (same formulas as drawBack)."""
-        if not self.is_food or self.category == "produce":
+        if self.nutrition is not None:
+            return self.nutrition
+        if self.source is not None or not self.is_food or self.category == "produce":
             return None
         i = self.class_id
         return {
@@ -89,7 +96,9 @@ class Product:
         }
 
     def other_store_prices(self) -> list[dict]:
-        """Deterministic fictional prices for the same item elsewhere, with age in days."""
+        """Real prices when the catalogue has them; otherwise fictional simulator prices."""
+        if self.prices_elsewhere is not None:
+            return [dict(o) for o in self.prices_elsewhere]
         out = []
         for st in OTHER_STORES:
             key = f"{self.sku}:{st['id']}"
@@ -107,8 +116,10 @@ class Product:
 
 
 class Catalog:
-    def __init__(self, products: list[Product]):
+    def __init__(self, products: list[Product], here_store: str = HERE_STORE, root: Path | None = None):
         self.products = products
+        self.here_store = here_store
+        self.root = root
         self.by_sku = {p.sku: p for p in products}
         self.by_barcode = {p.barcode_ean13: p for p in products}
         self.by_id = {p.class_id: p for p in products}
@@ -116,12 +127,24 @@ class Catalog:
     @classmethod
     def load(cls, path: str | Path | None = None) -> "Catalog":
         path = Path(path) if path else DATA_DIR / "catalog.json"
-        rows = json.loads(Path(path).read_text(encoding="utf-8"))
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+        here = HERE_STORE
+        if isinstance(data, dict):  # real catalogue: {"here_store": ..., "products": [...]}
+            here, rows = data.get("here_store", HERE_STORE), data["products"]
+        else:
+            rows = data
         prods = [Product(class_id=r["class_id"], sku=r["sku"], brand=r["brand"], name=r["name"],
                          category=r["category"], price_myr=float(r["price_myr"]),
                          barcode_ean13=r["barcode_ean13"], size=r.get("size", ""),
-                         allergens=ALLERGENS.get(r["sku"], [])) for r in rows]
-        return cls(prods)
+                         allergens=r.get("allergens", ALLERGENS.get(r["sku"], [])),
+                         nutrition=r.get("nutrition"), prices_elsewhere=r.get("prices_elsewhere"),
+                         image=r.get("image"), source=r.get("source")) for r in rows]
+        return cls(prods, here, Path(path).resolve().parent)
+
+    def alternatives(self, p: Product, k: int = 3) -> list[Product]:
+        """Other products in the same category, cheapest first."""
+        return sorted((q for q in self.products if q.category == p.category and q.sku != p.sku),
+                      key=lambda q: q.price_myr)[:k]
 
     def __len__(self) -> int:
         return len(self.products)

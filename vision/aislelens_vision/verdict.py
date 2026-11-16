@@ -72,6 +72,8 @@ def verdict(p: Product, price_here: float, price_source: str, profile: Profile |
     if c and cmp["saving_myr"] >= 0.10:
         where = c["store"] + (f" ({c['note']})" if c["note"] else "")
         price_line = f"{fmt(cmp['saving_myr'])} cheaper at {where}"
+    elif c and cmp["saving_myr"] > 0:
+        price_line = f"Good buy: within {fmt(cmp['saving_myr'])} of {c['store']}"
     else:
         price_line = "Good buy: cheapest nearby"
         ls = cmp["lowest_sticker"]

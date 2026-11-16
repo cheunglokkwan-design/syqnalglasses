@@ -105,7 +105,9 @@ class Pipeline:
             if under:
                 target, mode = min(under, key=lambda d: d["w"] * d["h"]), "looking"
 
-        result = {"mode": mode, "detections": len(dets), "item": None, "verdict": None}
+        result = {"mode": mode, "detections": len(dets), "item": None, "verdict": None, "image_size": [W, H],
+                  "boxes": [{"label": d["label"], "score": round(d["score"], 3), "depth_m": d.get("depth_m"),
+                             "box": [round(d[k]) for k in ("x0", "y0", "x1", "y1")]} for d in dets]}
         if target is not None:
             crop = _crop(img, target)
             ident = self.identify(crop, try_barcode=(mode == "held" or target["h"] > H * 0.3), timings=timings)
@@ -127,7 +129,7 @@ class Pipeline:
             # a tag price far from the known price is more likely a misread or the neighbour's tag
             if tag is not None and not (0.5 * p.price_myr <= float(tag["price_text"]) <= 1.5 * p.price_myr):
                 tag = None
-            price, src = (float(tag["price_text"]), "shelf tag") if tag else (p.price_myr, "catalogue")
+            price, src = (float(tag["price_text"]), "shelf tag") if tag else (p.price_myr, self.catalog.here_store)
             if tag is not None:
                 item["tag_box"] = [round(tag[k]) for k in ("x0", "y0", "x1", "y1")]
             item.update({"title": p.title, "size": p.size, "price_myr": price, "price_source": src})

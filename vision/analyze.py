@@ -24,7 +24,7 @@ def main():
     ap.add_argument("--json", action="store_true", help="print the full result")
     a, rest = ap.parse_known_args()
     sa = serve.argparse.ArgumentParser()
-    for k, v in [("--catalog", str(serve.HERE / "data" / "catalog.json")), ("--embedder", str(serve.ROOT / "runs" / "embedder")),
+    for k, v in [("--catalog", "real"), ("--embedder", None), ("--photos", None),
                  ("--detector", "auto"),
                  ("--detector-size", "nano"),
                  ("--accept", str(serve.ROOT / "runs" / "eval" / "report.json"))]:
