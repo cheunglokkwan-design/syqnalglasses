@@ -61,6 +61,8 @@ npm i playwright
 node generate_dataset.mjs --frames 500 --camera d435 --out ./dataset --gpu
 ```
 
+It uses the Chrome or Edge already installed on the machine, so `npm i playwright` is the only setup. Pass `--browser chromium` to use Playwright's own browser instead (run `npx playwright install chromium` first).
+
 The script puts a virtual shopper at random positions and angles in front of the shelves (eye height 1.0 to 1.75 m, looking up and down), re-stocks every 50 frames, changes the lighting every frame, and writes the files above. With `--gpu` on a normal laptop it does a few frames per second. Without a GPU it falls back to software rendering at about one frame every 10 seconds.
 
 In the browser, the **Save dataset .zip** button bundles the frames captured by hand. Browsers block downloads inside the hosted Claude viewer, so use it from a local copy of `index.html`.

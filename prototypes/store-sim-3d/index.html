@@ -1,3 +1,7 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AisleLens Store 3D</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Baloo+2:wght@700;800&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&family=Pacifico&family=Roboto+Slab:wght@700;800&display=swap">
@@ -497,8 +501,9 @@ function signTex(lines,w,h,opt={}){const cv=mkCanvas(w,h),ctx=cv.getContext('2d'
 function aisleSign(cat,x,y,z,ry){
   const c=CATS[cat];
   const t=signTex(null,1024,340,{draw:(ctx,w,h)=>{ctx.fillStyle='#ffc23d';ctx.beginPath();ctx.arc(170,h/2,120,0,7);ctx.fill();ctx.fillStyle='#1f2a24';ctx.font='700 130px "IBM Plex Sans",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(c.aisle,170,h/2+6);ctx.fillStyle='#fff';ctx.textAlign='left';ctx.font='600 74px "IBM Plex Sans",sans-serif';ctx.fillText(c.title,330,h*0.4);ctx.font='400 44px "IBM Plex Sans",sans-serif';ctx.fillStyle='#cfe3da';ctx.fillText(c.sub,332,h*0.72)}});
-  const m=new THREE.Mesh(new THREE.PlaneGeometry(1.5,0.5),new THREE.MeshStandardMaterial({map:t,roughness:0.6,side:THREE.DoubleSide,emissive:'#ffffff',emissiveMap:t,emissiveIntensity:0.25}));
-  m.position.set(x,y,z);m.rotation.y=ry;scene.add(m);
+  // two back-to-back single-sided planes, so the text reads correctly from both sides
+  const mat=new THREE.MeshStandardMaterial({map:t,roughness:0.6,emissive:'#ffffff',emissiveMap:t,emissiveIntensity:0.25}),geo=new THREE.PlaneGeometry(1.5,0.5);
+  for(const flip of [0,Math.PI]){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.rotation.y=ry+flip;scene.add(m)}
   box2(x,y+0.25,z,0.01,STORE.h-y-0.25);
 }
 const rodM=new THREE.Mesh(new THREE.CylinderGeometry(0.006,0.006,1,6),SMAT.steel);

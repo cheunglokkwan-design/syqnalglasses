@@ -22,10 +22,12 @@
 //   --seed N          base random seed (default 1)
 //   --three PATH      local three.module.min.js (v0.160.0) if the machine is offline
 //   --gpu             use the real GPU instead of software rendering
+//   --browser NAME    chrome, msedge or chromium (default: first one that works,
+//                     in that order; chromium needs `npx playwright install chromium`)
 import { chromium } from 'playwright';
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const args = process.argv.slice(2);
 const opt = (name, def) => { const i = args.indexOf('--' + name); return i >= 0 ? args[i + 1] : def; };
@@ -38,12 +40,24 @@ const html = path.join(here, 'index.html');
 for (const d of ['rgb', 'depth', 'mask', 'labels']) fs.mkdirSync(path.join(out, d), { recursive: true });
 
 const launchArgs = flag('gpu') ? ['--enable-gpu', '--ignore-gpu-blocklist'] : ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'];
-const browser = await chromium.launch({ args: launchArgs });
+// Prefer the Chrome or Edge already on the machine, so `npm i playwright` is enough.
+const wanted = opt('browser');
+let browser;
+for (const channel of wanted ? [wanted] : ['chrome', 'msedge', 'chromium']) {
+  try {
+    browser = await chromium.launch({ args: launchArgs, ...(channel === 'chromium' ? {} : { channel }) });
+    console.log(`Using ${channel}`);
+    break;
+  } catch (e) {
+    if (wanted) throw e;
+  }
+}
+if (!browser) throw new Error('No browser found. Install Chrome or Edge, or run: npx playwright install chromium');
 const page = await browser.newPage({ viewport: { width: 640, height: 400 } });
 page.on('pageerror', e => console.error('page error:', e.message));
 const three = opt('three');
 if (three) await page.route('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js', r => r.fulfill({ path: three, contentType: 'application/javascript' }));
-await page.goto('file://' + html);
+await page.goto(pathToFileURL(html).href);
 await page.waitForFunction(() => window.sim && window.sim.ready, null, { timeout: 180000 });
 // pause the interactive render loop so only dataset frames are rendered
 await page.evaluate(cam => { document.getElementById('start').hidden = true; window.sim.paused = true; window.sim.setPreset(cam); }, camera);
