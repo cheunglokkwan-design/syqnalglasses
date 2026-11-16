@@ -47,6 +47,35 @@ class RFDETRDetector:
         return out
 
 
+class MultiDetector:
+    """Runs several single-purpose detectors and merges their boxes.
+
+    Public real datasets each label one thing (SKU-110K: products, Open Food Facts: price
+    tags), so the real-image models are trained separately and combined here.
+    """
+
+    def __init__(self, detectors: list):
+        self.detectors = detectors
+
+    def __call__(self, img: Image.Image) -> list[dict]:
+        return [d for det in self.detectors for d in det(img)]
+
+
+def load_detectors(paths: list[str | Path], size: str = "nano", resolution: int | None = None):
+    """One checkpoint -> RFDETRDetector; several -> MultiDetector. Missing paths are skipped."""
+    import json
+    dets = []
+    for p in paths:
+        if not Path(p).exists():
+            continue
+        meta = Path(p).parent / "detector.json"  # written by tools/train_detector.py
+        m = json.loads(meta.read_text()) if meta.exists() else {}
+        dets.append(RFDETRDetector(p, size=m.get("size", size), resolution=m.get("resolution", resolution)))
+    if not dets:
+        return None
+    return dets[0] if len(dets) == 1 else MultiDetector(dets)
+
+
 class GroundTruthDetector:
     """Uses the simulator's labels as perfect detections, to test later stages on their own."""
 

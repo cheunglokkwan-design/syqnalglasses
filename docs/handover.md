@@ -2,6 +2,12 @@
 
 Branch: `vision-pipeline`. Goal of this stage: be able to use a trained vision model to recognise products in the 3D store simulator and give the shopping verdict, then take the same code to a RealSense camera in a real store.
 
+## Train on real images in Google Colab (no local GPU needed)
+
+Open [vision/colab/train_real_models.ipynb](https://colab.research.google.com/github/cheunglokkwan-design/syqnalglasses/blob/vision-pipeline/vision/colab/train_real_models.ipynb) in Colab, choose Runtime, then Change runtime type, then T4 GPU, then Run all. It trains a shelf-product detector (SKU-110K) and a price-tag detector (Open Food Facts photos) and saves them to Google Drive (`MyDrive/syqnal_runs`). For about an hour in total, run it on Colab with `TRAIN = 'products'` and on Kaggle with `TRAIN = 'tags'` at the same time. Copy `det_products/` and `det_tags/` into `runs/` and `vision/serve.py` uses them automatically.
+
+The first laptop (RTX 3050, 7.7 GB RAM) runs out of RAM during training while other apps are open, so Colab is the default place to train.
+
 ## Done
 
 **3D store simulator** ([`prototypes/store-sim-3d`](../prototypes/store-sim-3d/))

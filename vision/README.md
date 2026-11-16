@@ -61,6 +61,18 @@ node prototypes/store-sim-3d/generate_dataset.mjs --frames 200 --seed 33 --camer
 
 Train, validation and test use different random seeds, so test frames have shelf layouts, lighting and poses the models never saw. `data/` and `runs/` are git-ignored; the commands above recreate them.
 
+## Train on real images (Google Colab)
+
+[`colab/train_real_models.ipynb`](colab/train_real_models.ipynb) ([open in Colab](https://colab.research.google.com/github/cheunglokkwan-design/syqnalglasses/blob/vision-pipeline/vision/colab/train_real_models.ipynb)) downloads the real datasets, converts them with `tools/real_to_coco.py` and trains the two detectors in about an hour (run it on Colab and Kaggle at once, one detector each). `tools/eval_real_products.py` scores product recognition on real in-store photos and runs on a CPU:
+
+| Model | Real data | Licence |
+| --- | --- | --- |
+| Price-tag detector | [Open Food Facts price-tag-detection](https://huggingface.co/datasets/openfoodfacts/price-tag-detection), 2,229 shelf photos | CC BY-SA 4.0 |
+| Shelf-product detector | [SKU-110K](https://github.com/eg4000/SKU110K_CVPR19), real supermarket shelves | Academic, non-commercial only: replace before launch |
+| Product recognition benchmark | [Grocery Store Dataset](https://github.com/marcusklasson/GroceryStoreDataset), 81 products, in-store phone photos | MIT |
+
+Each public set labels only one kind of object, so products and tags get separate detectors, merged at run time (`MultiDetector`). Held items have no public real dataset yet: they need our own store clips.
+
 ## Use it
 
 ```bash

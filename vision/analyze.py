@@ -25,10 +25,12 @@ def main():
     a, rest = ap.parse_known_args()
     sa = serve.argparse.ArgumentParser()
     for k, v in [("--catalog", str(serve.HERE / "data" / "catalog.json")), ("--embedder", str(serve.ROOT / "runs" / "embedder")),
-                 ("--detector", str(serve.ROOT / "runs" / "detector" / "checkpoint_best_total.pth")), ("--detector-size", "nano"),
+                 ("--detector", "auto"),
+                 ("--detector-size", "nano"),
                  ("--accept", str(serve.ROOT / "runs" / "eval" / "report.json"))]:
         sa.add_argument(k, default=v)
     sa.add_argument("--no-head", action="store_true")
+    sa.add_argument("--detector-resolution", type=int, default=None)
     pipe, info = serve.build_pipeline(sa.parse_args(rest))
     pipe.profile = serve.Profile(allergies=[x for x in a.allergies.split(",") if x])
     img = Image.open(a.image).convert("RGB")

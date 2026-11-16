@@ -35,6 +35,9 @@ def main():
     device = a.device or ("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Training RF-DETR {a.size} on {device}; data {a.data}; out {a.out}")
     Path(a.out).mkdir(parents=True, exist_ok=True)
+    import json
+    (Path(a.out) / "detector.json").write_text(json.dumps({"size": a.size, "resolution": a.resolution or getattr(getattr(model, "model_config", None), "resolution", None),
+                                                           "data": a.data}), encoding="utf-8")
     args = dict(dataset_dir=a.data, output_dir=a.out, epochs=a.epochs, batch_size=a.batch, grad_accum_steps=a.accum,
                 lr=a.lr, num_workers=a.workers, device=device, tensorboard=False, progress_bar="tqdm",
                 checkpoint_interval=1, multi_scale=False, run_test=False)

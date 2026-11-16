@@ -48,11 +48,15 @@ def build_pipeline(a) -> tuple[Pipeline, dict]:
     acc_file = Path(a.accept)
     if acc_file.exists():
         accept = Accept(**json.loads(acc_file.read_text())["accept"])
-    det_path = Path(a.detector)
-    if det_path.exists():
-        from aislelens_vision.detector import RFDETRDetector
-        det = RFDETRDetector(det_path, size=a.detector_size)
-        det_name = f"RF-DETR {a.detector_size} ({det_path.name})"
+    from aislelens_vision.detector import load_detectors
+    if a.detector == "auto":
+        real = [ROOT / "runs" / d / "checkpoint_best_total.pth" for d in ("det_products", "det_tags")]
+        paths = [str(p) for p in real if p.exists()] or [str(ROOT / "runs" / "detector" / "checkpoint_best_total.pth")]
+    else:
+        paths = [p for p in a.detector.split(",") if p]
+    det = load_detectors(paths, size=a.detector_size, resolution=a.detector_resolution)
+    if det is not None:
+        det_name = f"RF-DETR {a.detector_size}: " + ", ".join(Path(p).parent.name + "/" + Path(p).name for p in paths if Path(p).exists())
     else:
         from aislelens_vision.detector import _det
 
@@ -77,8 +81,10 @@ def main():
     ap.add_argument("--catalog", default=str(HERE / "data" / "catalog.json"))
     ap.add_argument("--embedder", default=str(ROOT / "runs" / "embedder"))
     ap.add_argument("--no-head", action="store_true")
-    ap.add_argument("--detector", default=str(ROOT / "runs" / "detector" / "checkpoint_best_total.pth"))
+    ap.add_argument("--detector", default="auto",
+                    help="RF-DETR checkpoints, comma separated; auto = the real product + tag models if trained, else the simulator model")
     ap.add_argument("--detector-size", default="nano")
+    ap.add_argument("--detector-resolution", type=int, default=None, help="the resolution the checkpoints were trained at, e.g. 640")
     ap.add_argument("--accept", default=str(ROOT / "runs" / "eval" / "report.json"),
                     help="report.json from tools/evaluate.py, for the tuned 'turn the pack' threshold")
     a = ap.parse_args()
