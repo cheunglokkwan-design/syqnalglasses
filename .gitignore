@@ -4,8 +4,8 @@ node_modules/
 package-lock.json
 package.json
 # generated simulator datasets, model weights and run outputs (large; regenerate with the scripts)
-data/
-runs/
+/data/
+/runs/
 *.pth
 *.onnx
 __pycache__/

@@ -1,0 +1,142 @@
+[
+ {
+  "id": "RP-01",
+  "brand": "Nestlé",
+  "name": "Milo Activ-Go",
+  "size": "1 kg",
+  "query": "milo activ-go"
+ },
+ {
+  "id": "RP-02",
+  "brand": "Maggi",
+  "name": "Kari instant noodles 5-pack",
+  "size": "5 x 79 g",
+  "query": "maggi kari"
+ },
+ {
+  "id": "RP-03",
+  "brand": "Dutch Lady",
+  "name": "Pure Farm full cream milk",
+  "size": "1 L",
+  "query": "dutch lady pure farm full cream milk"
+ },
+ {
+  "id": "RP-04",
+  "brand": "Gardenia",
+  "name": "Original Classic white bread",
+  "size": "400 g",
+  "query": "gardenia original classic"
+ },
+ {
+  "id": "RP-05",
+  "brand": "Nescafé",
+  "name": "Classic coffee jar",
+  "size": "200 g",
+  "query": "nescafe classic 200g"
+ },
+ {
+  "id": "RP-06",
+  "brand": "Julie's",
+  "name": "Peanut Butter Sandwich",
+  "size": "",
+  "query": "julie's peanut butter sandwich"
+ },
+ {
+  "id": "RP-07",
+  "brand": "Mamee",
+  "name": "Monster snack multipack",
+  "size": "",
+  "query": "mamee monster"
+ },
+ {
+  "id": "RP-08",
+  "brand": "Yeo's",
+  "name": "Soy bean drink",
+  "size": "1 L",
+  "query": "yeo's soy bean"
+ },
+ {
+  "id": "RP-09",
+  "brand": "100PLUS",
+  "name": "Isotonic drink",
+  "size": "1.5 L",
+  "query": "100plus"
+ },
+ {
+  "id": "RP-10",
+  "brand": "Ayam Brand",
+  "name": "Sardines in tomato sauce",
+  "size": "425 g",
+  "query": "ayam brand sardines tomato"
+ },
+ {
+  "id": "RP-11",
+  "brand": "Adabi",
+  "name": "Meat curry powder",
+  "size": "250 g",
+  "query": "adabi serbuk kari daging"
+ },
+ {
+  "id": "RP-12",
+  "brand": "Hup Seng",
+  "name": "Special Cream Crackers",
+  "size": "428 g",
+  "query": "hup seng cream crackers"
+ },
+ {
+  "id": "RP-13",
+  "brand": "Mister Potato",
+  "name": "Original crisps",
+  "size": "160 g",
+  "query": "mister potato original"
+ },
+ {
+  "id": "RP-14",
+  "brand": "Nestlé",
+  "name": "Kit Kat 4-finger",
+  "size": "",
+  "query": "kit kat 4 finger"
+ },
+ {
+  "id": "RP-15",
+  "brand": "Farm Fresh",
+  "name": "Full cream milk",
+  "size": "1 L",
+  "query": "farm fresh full cream milk"
+ },
+ {
+  "id": "RP-16",
+  "brand": "Nestlé",
+  "name": "Koko Krunch cereal",
+  "size": "330 g",
+  "query": "koko krunch"
+ },
+ {
+  "id": "RP-17",
+  "brand": "Quaker",
+  "name": "Instant Oatmeal",
+  "size": "800 g",
+  "query": "quaker instant oatmeal"
+ },
+ {
+  "id": "RP-18",
+  "brand": "Lee Kum Kee",
+  "name": "Premium Oyster Sauce",
+  "size": "510 g",
+  "query": "lee kum kee premium oyster sauce"
+ },
+ {
+  "id": "RP-19",
+  "brand": "Knife",
+  "name": "Blended cooking oil",
+  "size": "2 kg",
+  "query": "knife cooking oil"
+ },
+ {
+  "id": "RP-20",
+  "brand": "Vitagen",
+  "name": "Cultured milk drink 5-pack",
+  "size": "5 x 125 ml",
+  "query": "vitagen"
+ }
+]

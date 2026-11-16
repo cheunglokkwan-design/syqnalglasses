@@ -14,6 +14,7 @@ This repository holds the planning documents, the store simulators, and the firs
 | [prototypes/store-sim-3d/](prototypes/store-sim-3d/) | AisleLens Store 3D: first-person supermarket you walk and pick products in, with RealSense-style RGB-D frames and exact product labels, plus a headless dataset generator |
 | [vision/](vision/) | Vision pipeline: RF-DETR detector, DINOv2 product matching, barcode and price-tag reading, shopping verdict; training and scoring scripts; a local server the 3D store and a RealSense camera talk to |
 | [docs/handover.md](docs/handover.md) | Where the work stands and what to do next |
+| [docs/real-world-plan.md](docs/real-world-plan.md) | Real-world plan: real datasets and licences, first 20 Malaysian products with prices, glasses choice, store pilot, milestones ([live doc](https://claude.ai/artifact/Pe4TGvhKj6T8Vd8ZaLSKf2)) |
 | [prototypes/aislelens-2d-simulator.html](prototypes/aislelens-2d-simulator.html) | AisleLens 2D store simulator. Open it in any browser to walk the scan, compare and verdict loop in a fictional store |
 
 The docs are Markdown exports of living documents. The diagrams in them are only in the live versions:
