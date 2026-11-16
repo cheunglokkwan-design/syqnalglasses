@@ -1,0 +1,639 @@
+<title>AisleLens Store Simulator</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: three working panes left to right, store floor -> what the glasses see -> the phone companion. */
+:root{
+  --bg:#eef2f0; --surface:#ffffff; --surface-2:#f6f8f7; --ink:#15201b; --muted:#5a6a63; --line:#d6dfdb;
+  --accent:#0d7a5c; --accent-soft:#d8efe7; --good:#157f3b; --warn:#a85a07; --bad:#b42318; --bad-soft:#fde5e2;
+  --scene-1:#2a2420; --scene-2:#14110f; --hud:#8dffc0; --hud-dim:#5fbf8c;
+  --f-display:"Space Grotesk",ui-sans-serif,system-ui,sans-serif;
+  --f-body:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1311; --surface:#151c19; --surface-2:#1a2320; --ink:#e4ece8; --muted:#97a8a0; --line:#2a3632;
+  --accent:#3cc59a; --accent-soft:#173a2f; --good:#4cc77a; --warn:#e0a04a; --bad:#ff7a6b; --bad-soft:#3a1d1a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1311; --surface:#151c19; --surface-2:#1a2320; --ink:#e4ece8; --muted:#97a8a0; --line:#2a3632;
+  --accent:#3cc59a; --accent-soft:#173a2f; --good:#4cc77a; --warn:#e0a04a; --bad:#ff7a6b; --bad-soft:#3a1d1a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 32px}
+h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px;margin:0 auto 16px;max-width:1440px}
+.top h1{font-size:22px;letter-spacing:-.01em}
+.top h1 span{color:var(--accent)}
+.top p{margin:0;color:var(--muted)}
+.pill{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:2px 10px;color:var(--muted);background:var(--surface)}
+.grid{display:grid;gap:16px;max-width:1440px;margin:0 auto;grid-template-columns:minmax(250px,1fr) minmax(0,1.7fr) minmax(300px,1.15fr);align-items:start}
+@media (max-width:1150px){.grid{grid-template-columns:minmax(0,1fr) minmax(0,1.4fr)} .phone{grid-column:1/-1}}
+@media (max-width:760px){.grid{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;min-width:0}
+.eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.card h2{font-size:16px;margin:2px 0 12px}
+/* store map */
+.aisles{display:flex;flex-direction:column;gap:12px}
+.aisle{border-top:1px solid var(--line);padding-top:10px}
+.aisle-head{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px}
+.aisle-head b{color:var(--ink);font-family:var(--f-display);font-weight:600;font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface-2);border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer;max-width:100%}
+.chip i{width:10px;height:14px;border-radius:2px;flex:none}
+.chip:hover{border-color:var(--accent)}
+.chip[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);font-weight:600}
+.chip.inbasket::after{content:"in basket";font-size:10px;color:var(--accent);margin-left:2px}
+/* glasses view */
+.glass{display:flex;flex-direction:column;gap:12px;min-width:0}
+.view{position:relative;aspect-ratio:16/10;max-width:100%;border-radius:14px;overflow:hidden;
+  background:radial-gradient(120% 90% at 50% 20%,var(--scene-1),var(--scene-2));border:1px solid #000;color:#fff}
+.shelf{position:absolute;left:0;right:0;bottom:16%;height:5%;background:linear-gradient(#c9c2b8,#8d867c);box-shadow:0 6px 12px rgba(0,0,0,.5)}
+.side-packs{position:absolute;bottom:21%;display:flex;gap:8px;opacity:.35;filter:blur(1.5px)}
+.side-packs.l{left:3%} .side-packs.r{right:3%}
+.side-packs div{width:clamp(30px,6vw,64px);border-radius:4px}
+.pack{position:absolute;left:34%;bottom:21%;transform:translateX(-50%);width:32%;aspect-ratio:3/4;border-radius:8px;
+  background:var(--pk,#555);box-shadow:0 10px 30px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.15);padding:6% 7%;display:flex;flex-direction:column;gap:4%;transition:background .3s}
+.pack .pb{font-size:clamp(8px,1.1vw,12px);letter-spacing:.12em;text-transform:uppercase;opacity:.85;font-weight:600}
+.pack .pn{font-family:var(--f-display);font-weight:700;font-size:clamp(12px,2vw,22px);line-height:1.05}
+.pack .ps{font-size:clamp(9px,1.2vw,13px);opacity:.9}
+.pack .bc{margin-top:auto;align-self:flex-end;width:58%;background:#fff;border-radius:3px;padding:3px}
+.pack .bc svg{display:block;width:100%;height:auto}
+.pack .loose{margin-top:auto;font-size:clamp(9px,1.1vw,12px);background:rgba(0,0,0,.35);padding:4px 6px;border-radius:4px;align-self:flex-start}
+.tag{position:absolute;left:34%;transform:translateX(-50%);bottom:9%;background:#fffef6;color:#111;border-radius:3px;padding:3px 10px;
+  font-family:var(--f-mono);display:flex;gap:10px;align-items:baseline;white-space:nowrap;font-size:clamp(9px,1.2vw,12px)}
+.tag b{font-size:clamp(12px,1.8vw,18px)}
+.tag .promo{background:#e3262b;color:#fff;padding:0 5px;border-radius:2px;font-weight:600}
+.empty-view{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:#cfc8bf;padding:16px;font-size:14px}
+.reticle{position:absolute;border:2px solid var(--hud);border-radius:6px;pointer-events:none;box-shadow:0 0 12px rgba(141,255,192,.5)}
+.reticle::after{content:"";position:absolute;left:0;right:0;height:2px;background:var(--hud);top:0;animation:sweep .7s ease-in-out infinite alternate}
+@keyframes sweep{to{top:calc(100% - 2px)}}
+@media (prefers-reduced-motion:reduce){.reticle::after{animation:none;top:50%}}
+.hud{position:absolute;top:5%;right:4%;width:min(46%,340px);font-family:var(--f-mono);color:var(--hud);
+  background:rgba(4,20,12,.55);border:1px solid rgba(141,255,192,.35);border-radius:10px;padding:10px 12px;font-size:clamp(10px,1.15vw,13px);
+  line-height:1.4;text-shadow:0 0 6px rgba(141,255,192,.45);backdrop-filter:blur(2px)}
+.hud .h1{font-weight:600;font-size:1.08em;color:#d8ffe9}
+.hud .row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:0 8px}
+.hud .v{margin-top:4px}
+.hud .alert{color:#ffb4a8;text-shadow:0 0 6px rgba(255,120,100,.5)}
+.hud .warnc{color:#ffd88a}
+.hud .ft{margin-top:6px;color:var(--hud-dim);font-size:.85em;display:flex;justify-content:space-between;gap:8px}
+.lens-label{position:absolute;left:3%;top:4%;font-family:var(--f-mono);font-size:11px;color:rgba(255,255,255,.55)}
+.caption{position:absolute;left:4%;right:4%;bottom:2.5%;font-size:clamp(10px,1.2vw,13px);background:rgba(0,0,0,.65);border-radius:6px;padding:6px 10px;color:#fff}
+.caption b{color:var(--hud)}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 12px;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+:root .btn.primary{color:var(--surface)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+kbd{font-family:var(--f-mono);font-size:11px;border:1px solid currentColor;border-radius:4px;padding:0 4px;opacity:.8;margin-left:6px}
+.settings{display:flex;flex-wrap:wrap;gap:12px 20px;font-size:13px;color:var(--muted)}
+.settings label{display:flex;gap:6px;align-items:center}
+.settings select{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:4px 6px}
+.voice{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.voice span{font-size:12px;color:var(--muted)}
+.vchip{border:1px dashed var(--line);background:transparent;border-radius:999px;padding:4px 10px;font-size:12px;cursor:pointer}
+.vchip:hover{border-color:var(--accent);color:var(--accent)}
+/* phone companion */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:0 -16px 12px;padding:0 12px;overflow-x:auto}
+.tab{border:0;background:none;padding:8px 8px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;font-size:13px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+.panel-empty{color:var(--muted);padding:16px 0}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;font-weight:600;padding:6px 6px;border-bottom:1px solid var(--line)}
+td{padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right}
+tr.best td{background:var(--accent-soft)}
+.sub{font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;font-size:11px;border-radius:4px;padding:1px 6px;border:1px solid var(--line);margin:0 4px 4px 0}
+.badge.here{border-color:var(--accent);color:var(--accent)}
+.badge.promo{background:#e3262b;border-color:#e3262b;color:#fff}
+.badge.stale{border-color:var(--warn);color:var(--warn)}
+.badge.alert{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.ng{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:6px;font-family:var(--f-display);font-weight:700;color:#fff}
+.ng.A{background:#1e8e3e}.ng.B{background:#7cb342}.ng.C{background:#f29900}.ng.D{background:#d93025}
+.sect{margin-top:16px}
+.sect h3{font-size:13px;margin-bottom:6px}
+.note{font-size:12px;color:var(--muted);margin:8px 0 0}
+.alt{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:8px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.alt:hover .an{color:var(--accent)}
+.alt .an{font-weight:600}
+.alt .sc{font-family:var(--f-display);font-weight:700;font-size:18px;text-align:right}
+.bars{grid-column:1/-1;display:flex;gap:3px;height:6px;margin-top:4px}
+.bars span{border-radius:2px;background:var(--accent);opacity:.85}
+.bars span.h{background:#4b8bd6}.bars span.b{background:#b37ad6}.bars span.e{background:#d6a54b}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:var(--muted)}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px}
+.slider{display:grid;grid-template-columns:80px 1fr 20px;gap:8px;align-items:center;font-size:13px;margin:6px 0}
+.slider input{width:100%;accent-color:var(--accent)}
+.checks{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:13px}
+.checks label{display:flex;gap:5px;align-items:center}
+.qty{display:inline-flex;gap:4px;align-items:center}
+.qty button{width:22px;height:22px;border:1px solid var(--line);border-radius:4px;background:var(--surface);cursor:pointer;line-height:1}
+.meter{height:8px;border-radius:4px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden;margin-top:6px}
+.meter div{height:100%;background:var(--accent)}
+.meter.over div{background:var(--bad)}
+.kv{display:flex;justify-content:space-between;gap:8px;padding:4px 0;font-variant-numeric:tabular-nums}
+.kv b{font-family:var(--f-display)}
+.log{margin-top:12px;font-family:var(--f-mono);font-size:11.5px;color:var(--muted);max-height:120px;overflow:auto;border-top:1px solid var(--line);padding-top:8px}
+.foot{max-width:1440px;margin:20px auto 0;color:var(--muted);font-size:12px}
+svg text{font-family:var(--f-mono)}
+</style>
+
+<header class="top">
+  <h1>Aisle<span>Lens</span></h1>
+  <p>Grocery store simulator for a smart-glasses shopping assistant</p>
+  <span class="pill">Simulated stores and prices · SGD</span>
+</header>
+
+<main class="grid">
+  <section class="card map" aria-label="Store floor">
+    <div class="eyebrow">You are in</div>
+    <h2>LionMart · 7 aisles</h2>
+    <div class="aisles" id="aisles"></div>
+  </section>
+
+  <section class="glass" aria-label="Glasses view">
+    <div class="view" id="view"></div>
+    <div class="controls">
+      <button class="btn primary" id="scanBtn" type="button">Scan item<kbd>Space</kbd></button>
+      <button class="btn" id="addBtn" type="button">Add to basket<kbd>B</kbd></button>
+      <div class="voice" aria-label="Voice commands">
+        <span>Say:</span>
+        <button class="vchip" type="button" data-cmd="compare">"Compare prices"</button>
+        <button class="vchip" type="button" data-cmd="healthier">"Healthier option?"</button>
+        <button class="vchip" type="button" data-cmd="basket">"Cheapest basket"</button>
+      </div>
+    </div>
+    <div class="settings card" style="padding:12px 16px">
+      <label for="mode">Glasses type
+        <select id="mode"><option value="hud">Display on lens</option><option value="audio">Audio only (no display)</option></select></label>
+      <label for="pipe">Pipeline
+        <select id="pipe"><option value="device">On-device decode + cached prices</option><option value="cloud">Cloud lookup (image upload)</option><option value="weak">Cloud on weak signal</option></select></label>
+      <label for="auto"><input type="checkbox" id="auto"> Auto-scan on gaze</label>
+      <label for="speak"><input type="checkbox" id="speak"> Speak verdict</label>
+    </div>
+  </section>
+
+  <section class="card phone" aria-label="Phone companion">
+    <div class="eyebrow">Phone companion</div>
+    <h2 id="phoneTitle">Nothing scanned yet</h2>
+    <div class="tabs" role="tablist" id="tabs">
+      <button class="tab" role="tab" data-tab="compare">Compare</button>
+      <button class="tab" role="tab" data-tab="alts">Shelf picks</button>
+      <button class="tab" role="tab" data-tab="nutri">Nutrition</button>
+      <button class="tab" role="tab" data-tab="basket">Basket</button>
+      <button class="tab" role="tab" data-tab="prefs">My weights</button>
+    </div>
+    <div id="panel"></div>
+    <div class="log" id="log" aria-label="Event log"></div>
+  </section>
+</main>
+<p class="foot">All stores, brands, barcodes and prices here are made up for the simulation. Barcodes use the Singapore GS1 prefix 888 with valid EAN-13 check digits. Nutri-Grade is an approximation from sugar and saturated fat per 100 ml.</p>
+
+<script>
+(function(){
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = v => 'S$' + v.toFixed(2);
+const hash = str => { let h = 2166136261; for (const c of str) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return ((h >>> 0) % 100000) / 100000; };
+const r05 = x => Math.round(x * 20) / 20;
+const rand = (a, b) => Math.round(a + Math.random() * (b - a));
+
+const STORES = [
+  {id:'lion', name:'LionMart', note:'You are here', dist:0, mult:1, here:true},
+  {id:'kampong', name:'Kampong Grocer', note:'Neighbourhood shop', dist:0.3, mult:1.03},
+  {id:'harbour', name:'Harbour Fresh', note:'Premium supermarket', dist:0.6, mult:1.12},
+  {id:'value', name:'ValuePlus', note:'Discount warehouse', dist:1.2, mult:0.92},
+  {id:'online', name:'QuickCart Online', note:'S$4.99 delivery under S$60', dist:null, mult:0.97, online:true}
+];
+const AISLES = ['Fresh produce','Dairy & chilled','Bakery','Rice & noodles','Drinks','Snacks','Household'];
+const DRINK_GROUPS = ['milk','drinks'];
+
+// nut = per 100 g/ml: [kcal, sugar g, sat fat g, sodium mg, protein g, fibre g]
+const P = [];
+function add(id, aisle, group, brand, name, unit, qty, size, base, nut, brandScore, eco, allergens, tags, origin, color, extra){
+  P.push(Object.assign({id, aisle, group, brand, name, unit, qty, size, base, nut, brandScore, eco, allergens, tags, origin, color, known:true, barcode:true}, extra||{}));
+}
+add('f1',0,'fruit','Loose','Bananas','g',1000,'per kg',2.80,[89,12,0.1,1,1.1,2.6],3,4,[],['Fresh'],'Philippines','#d8b52a',{barcode:false,fresh:true});
+add('f2',0,'fruit','Orchard Lane','Fuji Apples','pc',4,'4 pcs',3.95,[52,10,0,1,0.3,2.4],4,3,[],['Fresh'],'Japan','#c23a3a',{fresh:true});
+add('m1',1,'milk','Meadow Farm','Fresh Milk','ml',2000,'2 L',6.20,[66,4.8,2.3,45,3.3,0],4,3,['dairy'],['Halal'],'Malaysia','#2f6fb3');
+add('m2',1,'milk','Meadow Farm','Low Fat Milk','ml',1000,'1 L',3.55,[46,4.9,0.9,48,3.5,0],4,3,['dairy'],['Halal','Healthier Choice'],'Malaysia','#5b9fd6');
+add('m3',1,'milk','Island Dairy','Fresh Milk','ml',1000,'1 L',3.40,[64,4.7,2.2,44,3.2,0],3,4,['dairy'],['Halal'],'Singapore','#cf4b3a');
+add('m4',1,'milk','OatWay','Oat Drink','ml',1000,'1 L',4.95,[46,4.0,0.3,40,1.0,0.8],4,5,['gluten'],['Vegan'],'Sweden','#b9973f');
+add('e1',1,'eggs','Sunny Coop','Fresh Eggs','pc',10,'10 eggs',3.60,[143,0.4,3.1,140,12.6,0],3,3,['egg'],['Halal'],'Malaysia','#c98a3b');
+add('e2',1,'eggs','Kopi Farm','Omega-3 Eggs','pc',10,'10 eggs',4.70,[140,0.4,2.6,140,12.8,0],4,3,['egg'],['Halal'],'Singapore','#8c5a2b');
+add('e3',1,'eggs','Sunny Coop','Value Eggs','pc',30,'30 eggs',8.90,[143,0.4,3.1,140,12.6,0],3,3,['egg'],['Halal'],'Malaysia','#a8742f');
+add('x1',1,'kimchi','Seoul Table','Napa Kimchi','g',500,'500 g',6.90,null,3,3,[],[],'Korea','#b8321f',{known:false});
+add('b1',2,'bread','Sunrise','White Bread','g',600,'600 g',2.65,[265,5,0.6,490,8,2.4],4,3,['gluten'],['Halal'],'Singapore','#e0a13a');
+add('b2',2,'bread','Sunrise','Wholemeal Bread','g',400,'400 g',2.75,[245,4,0.5,430,10,6.5],4,3,['gluten'],['Halal','Healthier Choice'],'Singapore','#8a5a2e');
+add('b3',2,'bread',"Baker's Hearth",'Multigrain Loaf','g',500,'500 g',3.90,[250,3.5,0.7,400,11,7],5,3,['gluten','soy'],['Halal'],'Singapore','#5d6b3a');
+add('r1',3,'rice','Golden Grain','Jasmine Rice','g',5000,'5 kg',13.90,[350,0.1,0.2,5,7,1],4,2,[],['Halal'],'Thailand','#c9a227');
+add('r2',3,'rice','Golden Grain','Brown Rice','g',2000,'2 kg',7.20,[345,0.9,0.5,5,7.5,3.5],4,2,[],['Halal','Healthier Choice'],'Thailand','#7b5a2a');
+add('r3',3,'rice','Fragrant Pearl','Jasmine Rice','g',10000,'10 kg',24.50,[350,0.1,0.2,5,7,1],3,2,[],['Halal'],'Thailand','#2e7d5b');
+add('n1',3,'noodles','Mee Express','Curry Noodles','g',425,'5 x 85 g',4.20,[460,3,9,1650,9,2],4,2,['gluten','soy'],['Halal'],'Indonesia','#d6452b');
+add('n2',3,'noodles','Mee Express','Chicken Noodles','g',400,'5 x 80 g',3.95,[450,2,8.5,1500,9,2],4,2,['gluten','soy'],['Halal'],'Indonesia','#e3a32b');
+add('n3',3,'noodles','Light Bowl','Air-dried Noodles','g',280,'4 x 70 g',4.80,[350,2,1,900,11,3],3,3,['gluten'],['Halal','Healthier Choice'],'Taiwan','#3f8f8a');
+add('d1',4,'drinks','Fizz','Cola','ml',1500,'1.5 L',2.30,[42,10.6,0,10,0,0],4,2,[],[],'Singapore','#a3161f');
+add('d2',4,'drinks','Fizz','Cola Zero','ml',1500,'1.5 L',2.30,[0.3,0,0,12,0,0],4,2,[],[],'Singapore','#1b1b1b');
+add('d3',4,'drinks','Leafy','Green Tea, Less Sugar','ml',500,'500 ml',1.60,[16,4,0,10,0,0],3,3,[],['Halal'],'Singapore','#4f8f3a');
+add('d4',4,'drinks','Rally','Isotonic Drink','ml',500,'500 ml',1.40,[26,6.2,0,50,0,0],3,2,[],['Halal'],'Malaysia','#2a6fd1');
+add('d5',4,'drinks','Spring Peak','Mineral Water','ml',1500,'1.5 L',0.95,[0,0,0,2,0,0],3,2,[],['Halal'],'Malaysia','#69aee0');
+add('s1',5,'snacks','Crunch Co.','Potato Chips','g',160,'160 g',3.50,[540,1,4.5,520,6,4],4,2,[],['Halal'],'Malaysia','#e8b923',{history:[3.15,3.50,3.50,3.15,3.50,3.50,3.50]});
+add('s2',5,'snacks','Grainy','Baked Crackers','g',200,'200 g',2.95,[430,6,2,600,9,5],3,3,['gluten'],['Halal','Healthier Choice'],'Singapore','#a0692e');
+add('s3',5,'snacks','Nutty Trail','Mixed Nuts','g',300,'300 g',7.80,[610,4,6,10,20,7],4,3,['nuts'],['Halal'],'USA','#6b4a2b');
+add('s4',5,'snacks','Cocoa Ridge','70% Dark Chocolate','g',100,'100 g',3.20,[580,28,22,15,8,10],4,3,['dairy','soy'],[],'Belgium','#3a2418');
+add('h1',6,'dish','SparkleClean','Dishwashing Liquid','ml',900,'900 ml',3.90,null,4,2,[],[],'Thailand','#1f9bd1',{noHealth:true});
+add('h2',6,'dish','SparkleClean','Eco Refill Pouch','ml',1500,'1.5 L',5.20,null,4,5,[],['Refill'],'Thailand','#3aa35b',{noHealth:true});
+add('h3',6,'dish','LionMart Basics','Dishwashing Liquid','ml',1000,'1 L',2.40,null,2,2,[],['House brand'],'Malaysia','#d5d9dc',{noHealth:true});
+
+// EAN-13 with the Singapore 888 prefix
+P.forEach((p, i) => {
+  if (!p.barcode) { p.ean = null; return; }
+  const d = '8880' + String(p.aisle + 1).padStart(2, '0') + String(i * 37 + 1001).padStart(6, '0');
+  let sum = 0; for (let k = 0; k < 12; k++) sum += (+d[k]) * (k % 2 ? 3 : 1);
+  p.ean = d + ((10 - sum % 10) % 10);
+});
+const byId = Object.fromEntries(P.map(p => [p.id, p]));
+const byEan = Object.fromEntries(P.filter(p => p.ean && p.known).map(p => [p.ean, p]));
+
+const L = ['0001101','0011001','0010011','0111101','0100011','0110001','0101111','0111011','0110111','0001011'];
+const PAR = ['LLLLLL','LLGLGG','LLGGLG','LLGGGL','LGLLGG','LGGLLG','LGGGLL','LGLGLG','LGLGGL','LGGLGL'];
+const R = L.map(c => [...c].map(b => b === '1' ? '0' : '1').join(''));
+const G = R.map(c => [...c].reverse().join(''));
+function eanSvg(code){
+  const par = PAR[+code[0]]; let bits = '101';
+  for (let i = 1; i <= 6; i++) bits += (par[i - 1] === 'L' ? L : G)[+code[i]];
+  bits += '01010';
+  for (let i = 7; i <= 12; i++) bits += R[+code[i]];
+  bits += '101';
+  const guard = new Set(); [0,1,2,45,46,47,48,49,92,93,94].forEach(x => guard.add(x));
+  let rects = '';
+  for (let i = 0; i < 95; i++) if (bits[i] === '1') rects += `<rect x="${11 + i}" y="2" width="1" height="${guard.has(i) ? 44 : 38}" fill="#000"/>`;
+  const t = (x, s) => `<text x="${x}" y="50" font-size="8" fill="#000" text-anchor="middle">${s}</text>`;
+  return `<svg viewBox="0 0 117 52" role="img" aria-label="Barcode ${code}">${rects}${t(6, code[0])}${t(34, code.slice(1,7))}${t(80, code.slice(7))}</svg>`;
+}
+
+// Prices
+const PROMOS = {
+  'n1|lion': {type:'multi', n:2, total:7.50, label:'2 for S$7.50'},
+  'd1|lion': {type:'multi', n:3, total:6.00, label:'3 for S$6'},
+  's1|lion': {type:'pct', v:10, label:'10% off'},
+  'm1|harbour': {type:'pct', v:20, label:'20% off'},
+  'r1|value': {type:'pct', v:15, label:'15% off'},
+  'b2|kampong': {type:'pct', v:25, label:'25% off'}
+};
+function priceAt(p, s){
+  if (!s.here && hash(p.id + s.id + 'stock') < 0.1) return {stocked:false};
+  const shelf = s.here ? p.base : r05(p.base * s.mult * (1 + (hash(p.id + s.id) - 0.5) * 0.12));
+  const promo = PROMOS[p.id + '|' + s.id];
+  let eff = shelf;
+  if (promo) eff = promo.type === 'pct' ? Math.round(shelf * (1 - promo.v / 100) * 100) / 100 : promo.total / promo.n;
+  const hrs = s.online ? 0 : 1 + Math.floor(hash(p.id + s.id + 'age') * 40);
+  return {stocked:true, shelf, eff, promo, hrs, unit: unitPrice(p, eff)};
+}
+function unitPrice(p, price){ return p.unit === 'pc' ? price / p.qty : price / p.qty * 100; }
+const unitLabel = p => p.unit === 'pc' ? '/ pc' : p.unit === 'g' ? '/ 100 g' : '/ 100 ml';
+const ageLabel = h => h === 0 ? 'live' : h < 24 ? `${h} h ago` : `${Math.floor(h / 24)} d ago`;
+const HERE = STORES[0];
+function history(p){
+  if (p.history) return p.history;
+  return Array.from({length:7}, (_, i) => r05(p.base * (1 + (hash(p.id + 'w' + i) - 0.4) * 0.08)));
+}
+
+// Scoring
+function health(p){
+  if (p.noHealth || !p.nut) return null;
+  const [kcal, sugar, sat, sod, pro, fib] = p.nut;
+  let s = 60 - sugar * 2.2 - sat * 2.5 - sod / 35 + pro * 1.2 + fib * 2.5 + (p.fresh ? 35 : 0);
+  return Math.max(0, Math.min(100, Math.round(s)));
+}
+function nutriGrade(p){
+  if (!DRINK_GROUPS.includes(p.group) || !p.nut) return null;
+  const sugar = p.nut[1], sat = p.nut[2];
+  if (sugar <= 1 && sat <= 0.7) return 'A';
+  if (sugar <= 5 && sat <= 1.2) return 'B';
+  if (sugar <= 10 && sat <= 2.8) return 'C';
+  return 'D';
+}
+const state = {
+  looking:null, scanned:null, scanning:false, tab:'compare', mode:'hud', pipe:'device', auto:false, speak:false,
+  weights:{price:4, health:3, brand:1, eco:1}, allergens:new Set(['nuts']), budget:60, basket:{}, lastScan:null, lastHint:null
+};
+function groupOf(p){ return P.filter(q => q.group === p.group && q.known); }
+function scores(p){
+  const g = groupOf(p);
+  const units = g.map(q => priceAt(q, HERE).unit);
+  const min = Math.min(...units);
+  return g.map((q, i) => {
+    const parts = {price: min / units[i] * 100, health: health(q), brand: q.brandScore * 20, eco: q.eco * 20};
+    let tot = 0, wsum = 0;
+    for (const k in parts) { if (parts[k] == null) continue; tot += parts[k] * state.weights[k]; wsum += state.weights[k]; }
+    return {p:q, parts, score: wsum ? Math.round(tot / wsum) : 0};
+  }).sort((a, b) => b.score - a.score);
+}
+function cheapest(p){
+  let best = null;
+  for (const s of STORES) { const pr = priceAt(p, s); if (pr.stocked && (!best || pr.eff < best.pr.eff)) best = {s, pr}; }
+  return best;
+}
+function allergyHit(p){ return p.allergens.filter(a => state.allergens.has(a)); }
+
+// Verdict
+function verdict(p){
+  const here = priceAt(p, HERE), best = cheapest(p), lines = [];
+  const hit = allergyHit(p);
+  if (hit.length) lines.push({cls:'alert', t:`! Contains ${hit.join(', ')}`});
+  const diff = here.eff - best.pr.eff;
+  if (!best.s.here && diff >= 0.3) {
+    const where = best.s.online ? 'online (+ delivery)' : `${best.s.dist} km away`;
+    lines.push({cls:'warnc', t:`v ${money(diff)} less at ${best.s.name}, ${where}`});
+  } else lines.push({cls:'', t:'+ Cheapest nearby'});
+  if (here.promo) {
+    const h = history(p), low = Math.min(...h);
+    if (here.eff < low - 0.001) lines.push({cls:'', t:`+ ${here.promo.label}: lowest in 8 wks`});
+    else lines.push({cls:'warnc', t:`~ ${here.promo.label}: same as usual low`});
+  }
+  const sc = scores(p), mine = sc.find(x => x.p === p);
+  if (sc[0].p === p) lines.push({cls:'', t:`* Top pick on shelf (${mine.score})`});
+  else lines.push({cls:'', t:`> Better: ${sc[0].p.brand} ${sc[0].p.name} (${sc[0].score} vs ${mine.score})`});
+  return lines;
+}
+function spokenVerdict(p){
+  return verdict(p).map(l => l.t.replace(/^[!v+~*>]\s*/, '')).join('. ') + '.';
+}
+
+// Rendering: store map
+function renderAisles(){
+  $('#aisles').innerHTML = AISLES.map((a, i) => {
+    const items = P.filter(p => p.aisle === i);
+    return `<div class="aisle"><div class="aisle-head"><b>A${i + 1} · ${esc(a)}</b><span>${items.length} items</span></div><div class="chips">${
+      items.map(p => `<button class="chip${state.basket[p.id] ? ' inbasket' : ''}" type="button" data-id="${p.id}" aria-pressed="${state.looking === p.id}"><i style="background:${p.color}"></i>${esc(p.brand === 'Loose' ? p.name : p.brand + ' ' + p.name)}</button>`).join('')
+    }</div></div>`;
+  }).join('');
+}
+
+// Rendering: glasses view
+function renderView(){
+  const v = $('#view');
+  const p = state.looking && byId[state.looking];
+  if (!p) { v.innerHTML = `<div class="lens-label">CAMERA · right temple</div><div class="empty-view">Pick a product on the store floor to walk up and look at it.<br>Then tap Scan, or press Space.</div>`; return; }
+  const neighbours = P.filter(q => q.aisle === p.aisle && q !== p);
+  const side = (arr) => arr.map(q => `<div style="background:${q.color};height:${60 + (hash(q.id) * 50 | 0)}px"></div>`).join('');
+  const here = priceAt(p, HERE);
+  const tagPromo = here.promo ? `<span class="promo">${esc(here.promo.label)}</span>` : '';
+  let html = `<div class="lens-label">CAMERA · right temple</div>
+    <div class="side-packs l">${side(neighbours.slice(0, 3))}</div><div class="side-packs r">${side(neighbours.slice(3, 6))}</div>
+    <div class="shelf"></div>
+    <div class="pack" style="--pk:${p.color}"><div class="pb">${esc(p.brand)}</div><div class="pn">${esc(p.name)}</div><div class="ps">${esc(p.size)}</div>
+      ${p.ean ? `<div class="bc">${eanSvg(p.ean)}</div>` : `<div class="loose">Loose · sold by weight · no barcode</div>`}</div>
+    <div class="tag"><b>${money(here.shelf)}</b>${tagPromo}<span>${money(here.unit)} ${unitLabel(p)}</span></div>`;
+  if (state.scanning) html += `<div class="reticle" style="left:${p.ean ? 31 : 20}%;bottom:${p.ean ? 23 : 25}%;width:${p.ean ? 18 : 30}%;height:${p.ean ? 14 : 36}%"></div>`;
+  html += hudHtml();
+  v.innerHTML = html;
+}
+function hudHtml(){
+  const s = state.lastScan;
+  if (state.scanning) return state.mode === 'hud' ? `<div class="hud"><div class="h1">Scanning…</div><div class="ft"><span>${pipeName()}</span></div></div>` : `<div class="caption"><b>Listening chime</b> · scanning…</div>`;
+  if (!s || s.id !== state.looking) return state.lastHint ? `<div class="caption">${esc(state.lastHint)}</div>` : '';
+  if (s.kind === 'nomatch-produce') return state.mode === 'hud'
+    ? `<div class="hud"><div class="h1">No barcode found</div><div class="v warnc">Visual recognition runs in the cloud (v2). Switch pipeline to Cloud to try it.</div><div class="ft"><span>${s.ms} ms</span><span>${pipeName()}</span></div></div>`
+    : `<div class="caption"><b>Spoken:</b> No barcode found. Try the cloud pipeline for visual match.</div>`;
+  if (s.kind === 'unknown') return state.mode === 'hud'
+    ? `<div class="hud"><div class="h1">Not in catalogue</div><div class="v">EAN ${s.ean}</div><div class="v warnc">Say the product name, or add it from your phone.</div><div class="ft"><span>${s.ms} ms</span><span>${pipeName()}</span></div></div>`
+    : `<div class="caption"><b>Spoken:</b> I don't know this one yet. Say the name, or add it on your phone.</div>`;
+  const p = byId[s.id], here = priceAt(p, HERE);
+  const lines = verdict(p);
+  if (state.mode === 'audio') return `<div class="caption"><b>Spoken:</b> ${esc(p.brand)} ${esc(p.name)}, ${money(here.eff)}. ${esc(spokenVerdict(p))}</div>`;
+  return `<div class="hud"><div class="h1">${esc(p.brand)} ${esc(p.name)}</div>
+    <div class="row"><span>${money(here.eff)}${here.promo ? ' ea' : ''} · ${esc(p.size)}</span><span>${money(here.unit)}${unitLabel(p)}</span></div>
+    ${lines.map(l => `<div class="v ${l.cls}">${esc(l.t)}</div>`).join('')}
+    <div class="ft"><span>${s.ms} ms${s.cached ? ' · cached' : ''}${s.visual ? ' · image match 82%' : ''}</span><span>${pipeName()}</span></div></div>`;
+}
+const pipeName = () => ({device:'on-device', cloud:'cloud', weak:'cloud, weak 4G'})[state.pipe];
+
+// Scanning
+let scanTimer = null;
+function scan(){
+  const p = state.looking && byId[state.looking];
+  if (!p || state.scanning) return;
+  state.scanning = true; state.lastHint = null; renderView();
+  let ms, cached = false, timeout = false;
+  if (state.pipe === 'device') ms = rand(90, 180) + rand(40, 120);
+  else if (state.pipe === 'cloud') ms = rand(350, 700) + rand(250, 500);
+  else { ms = rand(1800, 3200); if (Math.random() < 0.3) { timeout = true; ms = 2500; } }
+  clearTimeout(scanTimer);
+  scanTimer = setTimeout(() => {
+    state.scanning = false;
+    if (!p.ean) {
+      if (state.pipe === 'device') { state.lastScan = {id:p.id, kind:'nomatch-produce', ms}; log(`${ms} ms  no barcode in frame (${p.name})`); }
+      else { state.lastScan = {id:p.id, kind:'ok', ms, visual:true, cached:timeout}; state.scanned = p.id; log(`${ms} ms  image match: ${p.name} (82%)`); }
+    } else if (!p.known) {
+      state.lastScan = {id:p.id, kind:'unknown', ms, ean:p.ean}; state.scanned = p.id; log(`${ms} ms  EAN ${p.ean} not in catalogue`);
+    } else {
+      cached = state.pipe === 'device' || timeout;
+      state.lastScan = {id:p.id, kind:'ok', ms, cached}; state.scanned = p.id;
+      log(`${ms} ms  ${p.ean}  ${p.brand} ${p.name}${timeout ? '  (network timeout, used cache)' : ''}`);
+    }
+    if (state.speak) speak();
+    renderAll();
+  }, ms);
+}
+function speak(){
+  try {
+    const s = state.lastScan; if (!s || !window.speechSynthesis) return;
+    let text = 'Not recognised.';
+    if (s.kind === 'ok') { const p = byId[s.id]; text = `${p.brand} ${p.name}, ${money(priceAt(p, HERE).eff)}. ${spokenVerdict(p)}`.replace(/S\$/g, '$'); }
+    speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+  } catch (e) {}
+}
+function log(msg){
+  const el = $('#log'); const t = new Date().toTimeString().slice(0, 8);
+  el.insertAdjacentHTML('afterbegin', `<div>${t}  ${esc(msg)}</div>`);
+}
+function look(id){
+  state.looking = id; state.lastHint = null;
+  renderAll();
+  clearTimeout(look.dwell);
+  if (state.auto) look.dwell = setTimeout(scan, 800);
+}
+function addToBasket(id){
+  const p = byId[id || state.scanned];
+  if (!p || !p.known) return;
+  state.basket[p.id] = (state.basket[p.id] || 0) + 1;
+  state.lastHint = `Added ${p.brand} ${p.name} · basket ${money(basketTotal(HERE).total)}`;
+  log(`basket + ${p.brand} ${p.name}`);
+  renderAll();
+}
+
+// Basket maths
+function basketTotal(s){
+  let total = 0, missing = [];
+  for (const id in state.basket) { const p = byId[id], pr = priceAt(p, s); if (!pr.stocked) missing.push(p); else total += pr.eff * state.basket[id]; }
+  let fee = 0; if (s.online && total > 0 && total < 60) fee = 4.99;
+  return {total: total + fee, fee, missing};
+}
+function bestSplit(){
+  const physical = STORES.filter(s => !s.online); const plan = {}; let total = 0;
+  for (const id in state.basket) {
+    const p = byId[id]; let best = null;
+    for (const s of physical) { const pr = priceAt(p, s); if (pr.stocked && (!best || pr.eff < best.pr.eff - 0.001)) best = {s, pr}; }
+    (plan[best.s.id] = plan[best.s.id] || {s:best.s, items:[]}).items.push({p, qty:state.basket[id], cost:best.pr.eff * state.basket[id]});
+    total += best.pr.eff * state.basket[id];
+  }
+  return {plan:Object.values(plan), total};
+}
+
+// Rendering: phone companion
+function renderPanel(){
+  document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', t.dataset.tab === state.tab));
+  const p = state.scanned && byId[state.scanned];
+  $('#phoneTitle').textContent = p ? `${p.brand} ${p.name} · ${p.size}` : 'Nothing scanned yet';
+  const panel = $('#panel');
+  const needScan = `<div class="panel-empty">Scan a product to see this. Try the Meadow Farm milk, the Mee Express curry noodles, or the bananas.</div>`;
+  if (state.tab === 'basket') return panel.innerHTML = basketHtml();
+  if (state.tab === 'prefs') return panel.innerHTML = prefsHtml();
+  if (!p) return panel.innerHTML = needScan;
+  if (!p.known) return panel.innerHTML = `<div class="panel-empty"><b>EAN ${p.ean}</b> is not in the catalogue yet.<br><br>In the real app, this is where you would snap the label so the product gets added for everyone (crowd-sourced catalogue). This gap is common for imported and house-brand items.</div>`;
+  if (state.tab === 'compare') panel.innerHTML = compareHtml(p);
+  if (state.tab === 'alts') panel.innerHTML = altsHtml(p);
+  if (state.tab === 'nutri') panel.innerHTML = nutriHtml(p);
+}
+function compareHtml(p){
+  const rows = STORES.map(s => ({s, pr:priceAt(p, s)}));
+  const best = cheapest(p);
+  const h = history(p), cur = priceAt(p, HERE).eff, pts = [...h, cur];
+  const lo = Math.min(...pts) - 0.1, hi = Math.max(...pts) + 0.1;
+  const X = i => 8 + i * (224 / 7), Y = v => 52 - (v - lo) / (hi - lo) * 40;
+  const path = pts.map((v, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join(' ');
+  const low = Math.min(...h);
+  return `<div class="tw"><table><thead><tr><th>Store</th><th class="n">Price</th><th class="n">Unit</th><th>Updated</th></tr></thead><tbody>${
+    rows.map(({s, pr}) => !pr.stocked
+      ? `<tr><td>${esc(s.name)}<div class="sub">${esc(s.note)}</div></td><td class="n sub" colspan="2">Not stocked</td><td></td></tr>`
+      : `<tr class="${best.s === s ? 'best' : ''}"><td>${esc(s.name)} ${s.here ? '<span class="badge here">here</span>' : ''}<div class="sub">${esc(s.note)}${s.dist ? ' · ' + s.dist + ' km' : ''}</div></td>
+         <td class="n"><b>${money(pr.eff)}</b>${pr.promo ? `<div><span class="badge promo">${esc(pr.promo.label)}</span></div><div class="sub">shelf ${money(pr.shelf)}</div>` : ''}</td>
+         <td class="n">${money(pr.unit)}<div class="sub">${unitLabel(p)}</div></td>
+         <td>${ageLabel(pr.hrs)}${pr.hrs > 24 ? '<div><span class="badge stale">check</span></div>' : ''}</td></tr>`).join('')
+  }</tbody></table></div>
+  <p class="note">Green row is the lowest effective price. Multi-buy promos are shown per item and assume you buy the full deal. Online prices exclude delivery.</p>
+  <div class="sect"><h3>LionMart price, last 8 weeks</h3>
+    <svg viewBox="0 0 240 60" width="100%" style="max-width:360px" role="img" aria-label="Price history">
+      <line x1="8" x2="232" y1="${Y(low).toFixed(1)}" y2="${Y(low).toFixed(1)}" stroke="var(--line)" stroke-dasharray="3 3"/>
+      <path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2"/>
+      <circle cx="${X(7)}" cy="${Y(cur).toFixed(1)}" r="3.5" fill="var(--accent)"/>
+      <text x="232" y="${Math.max(10, Y(cur) - 6).toFixed(1)}" font-size="9" text-anchor="end" fill="var(--ink)">now ${money(cur)}</text>
+      <text x="8" y="${(Y(low) + 11).toFixed(1)}" font-size="8" fill="var(--muted)">8-wk low ${money(low)}</text>
+    </svg>
+    <p class="note">${cur < low - 0.001 ? 'Today is the lowest price in 8 weeks.' : cur <= low + 0.001 ? 'Today matches the 8-week low, so the promo is not unusual.' : `Today is ${money(cur - low)} above the 8-week low.`}</p>
+  </div>`;
+}
+function altsHtml(p){
+  const sc = scores(p);
+  return `<div class="legend"><span><i style="background:var(--accent)"></i>Price</span><span><i style="background:#4b8bd6"></i>Health</span><span><i style="background:#b37ad6"></i>Brand</span><span><i style="background:#d6a54b"></i>Eco</span></div>
+  ${sc.map(x => {
+    const w = state.weights, tw = Object.keys(w).reduce((a, k) => a + (x.parts[k] == null ? 0 : w[k]), 0) || 1;
+    const seg = (k, c) => x.parts[k] == null ? '' : `<span class="${c}" style="width:${(x.parts[k] * w[k] / tw).toFixed(1)}%"></span>`;
+    const pr = priceAt(x.p, HERE), hit = allergyHit(x.p);
+    return `<div class="alt" data-id="${x.p.id}" role="button" tabindex="0"><div><div class="an">${esc(x.p.brand)} ${esc(x.p.name)} ${x.p === p ? '<span class="badge here">scanned</span>' : ''}${hit.length ? `<span class="badge alert">${esc(hit.join(', '))}</span>` : ''}</div>
+      <div class="sub">${money(pr.eff)} · ${esc(x.p.size)} · ${money(pr.unit)} ${unitLabel(x.p)}</div></div><div class="sc">${x.score}</div>
+      <div class="bars">${seg('price', '')}${seg('health', 'h')}${seg('brand', 'b')}${seg('eco', 'e')}</div></div>`;
+  }).join('')}
+  <p class="note">Score out of 100 from your weights (My weights tab). Tap an item to look at it on the shelf.</p>`;
+}
+function nutriHtml(p){
+  if (!p.nut) return `<div class="panel-empty">No nutrition panel for household items. Eco score ${p.eco}/5${p.tags.length ? ' · ' + esc(p.tags.join(', ')) : ''}.</div>`;
+  const [kcal, sugar, sat, sod, pro, fib] = p.nut, g = nutriGrade(p), h = health(p), per = p.unit === 'ml' ? '100 ml' : '100 g';
+  const hit = allergyHit(p);
+  return `<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+    ${g ? `<div style="display:flex;gap:6px;align-items:center"><span class="ng ${g}">${g}</span><span class="sub">Nutri-Grade (approx.)</span></div>` : ''}
+    <div class="kv" style="gap:6px"><b style="font-size:22px">${h}</b><span class="sub">health score / 100</span></div></div>
+  <div class="tw sect"><table><thead><tr><th>Per ${per}</th><th class="n">Amount</th></tr></thead><tbody>
+    <tr><td>Energy</td><td class="n">${kcal} kcal</td></tr><tr><td>Sugar</td><td class="n">${sugar} g</td></tr>
+    <tr><td>Saturated fat</td><td class="n">${sat} g</td></tr><tr><td>Sodium</td><td class="n">${sod} mg</td></tr>
+    <tr><td>Protein</td><td class="n">${pro} g</td></tr><tr><td>Dietary fibre</td><td class="n">${fib} g</td></tr></tbody></table></div>
+  <div class="sect"><h3>Labels</h3>${p.tags.map(t => `<span class="badge">${esc(t)}</span>`).join('') || '<span class="sub">None</span>'}
+    ${p.allergens.map(a => `<span class="badge ${hit.includes(a) ? 'alert' : ''}">contains ${esc(a)}</span>`).join('')}
+    <div class="sub">Origin: ${esc(p.origin)}</div></div>`;
+}
+function basketHtml(){
+  const ids = Object.keys(state.basket);
+  if (!ids.length) return `<div class="panel-empty">Basket is empty. Scan something and press B or "Add to basket".</div>`;
+  const here = basketTotal(HERE), pct = Math.min(100, here.total / state.budget * 100);
+  const stores = STORES.map(s => ({s, t:basketTotal(s)})).filter(x => !x.t.missing.length).sort((a, b) => a.t.total - b.t.total);
+  const split = bestSplit();
+  return `<div class="tw"><table><thead><tr><th>Item</th><th class="n">Qty</th><th class="n">Here</th></tr></thead><tbody>${
+    ids.map(id => { const p = byId[id], pr = priceAt(p, HERE); return `<tr><td>${esc(p.brand)} ${esc(p.name)}<div class="sub">${esc(p.size)}</div></td>
+      <td class="n"><span class="qty"><button type="button" data-q="${id}" data-d="-1" aria-label="One less">−</button>${state.basket[id]}<button type="button" data-q="${id}" data-d="1" aria-label="One more">+</button></span></td>
+      <td class="n">${money(pr.eff * state.basket[id])}</td></tr>`; }).join('')
+  }</tbody></table></div>
+  <div class="sect"><div class="kv"><span>Total at LionMart</span><b>${money(here.total)}</b></div>
+    <div class="meter ${here.total > state.budget ? 'over' : ''}"><div style="width:${pct}%"></div></div>
+    <div class="sub">${here.total > state.budget ? `${money(here.total - state.budget)} over` : `${money(state.budget - here.total)} left of`} your ${money(state.budget)} budget</div></div>
+  <div class="sect"><h3>Whole basket at one store</h3>${stores.map(x => `<div class="kv"><span>${esc(x.s.name)}${x.t.fee ? ' <span class="sub">incl. delivery</span>' : ''}</span><span>${money(x.t.total)}</span></div>`).join('')}
+    ${STORES.filter(s => basketTotal(s).missing.length).map(s => `<div class="kv sub"><span>${esc(s.name)}</span><span>missing ${basketTotal(s).missing.length} item(s)</span></div>`).join('')}</div>
+  <div class="sect"><h3>Cheapest split across nearby stores</h3>
+    ${split.plan.map(g => `<div class="kv"><span>${esc(g.s.name)}${g.s.dist ? ` <span class="sub">${g.s.dist} km</span>` : ''}</span><span class="sub">${g.items.map(i => esc(i.p.name)).join(', ')}</span></div>`).join('')}
+    <div class="kv"><span>Split total</span><b>${money(split.total)}</b></div>
+    <p class="note">${split.plan.length > 1 ? `Visiting ${split.plan.length} stores saves ${money(here.total - split.total)} versus buying everything here. Worth it only if the stores are on your way.` : 'Everything is cheapest in one place, so no extra trips needed.'}</p></div>`;
+}
+function prefsHtml(){
+  const sl = (k, label) => `<div class="slider"><label for="w-${k}">${label}</label><input type="range" id="w-${k}" min="0" max="5" step="1" value="${state.weights[k]}" data-w="${k}"><span>${state.weights[k]}</span></div>`;
+  const al = ['nuts','dairy','gluten','soy','egg'];
+  return `<h3 style="font-size:13px">What matters to you</h3>${sl('price','Price')}${sl('health','Health')}${sl('brand','Brand')}${sl('eco','Eco')}
+  <div class="sect"><h3>Allergy alerts</h3><div class="checks">${al.map(a => `<label for="al-${a}"><input type="checkbox" id="al-${a}" data-al="${a}" ${state.allergens.has(a) ? 'checked' : ''}>${a}</label>`).join('')}</div></div>
+  <div class="sect"><h3>Trip budget</h3><label for="budget" class="kv"><span>S$</span><input id="budget" type="number" min="5" step="5" value="${state.budget}" style="width:90px;border:1px solid var(--line);border-radius:6px;padding:4px 6px;background:var(--surface)"></label></div>
+  <p class="note">Changing weights re-ranks Shelf picks and the "Better:" line on the lens straight away.</p>`;
+}
+function renderAll(){ renderAisles(); renderView(); renderPanel(); }
+
+// Events
+document.addEventListener('click', e => {
+  const chip = e.target.closest('.chip'); if (chip) return look(chip.dataset.id);
+  const alt = e.target.closest('.alt'); if (alt) return look(alt.dataset.id);
+  const tab = e.target.closest('.tab'); if (tab) { state.tab = tab.dataset.tab; return renderPanel(); }
+  const q = e.target.closest('[data-q]'); if (q) { const id = q.dataset.q; state.basket[id] += +q.dataset.d; if (state.basket[id] <= 0) delete state.basket[id]; return renderAll(); }
+  const v = e.target.closest('.vchip'); if (v) return voice(v.dataset.cmd);
+});
+document.addEventListener('keydown', e => {
+  if (e.target.matches('input,select,textarea')) return;
+  if (e.code === 'Space') { e.preventDefault(); scan(); }
+  if (e.key === 'b' || e.key === 'B') addToBasket();
+});
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.dataset.w) { state.weights[t.dataset.w] = +t.value; t.nextElementSibling.textContent = t.value; renderView(); return; }
+  if (t.dataset.al) { t.checked ? state.allergens.add(t.dataset.al) : state.allergens.delete(t.dataset.al); renderView(); return; }
+  if (t.id === 'budget') { state.budget = Math.max(5, +t.value || 60); return; }
+});
+$('#scanBtn').onclick = scan;
+$('#addBtn').onclick = () => addToBasket();
+$('#mode').onchange = e => { state.mode = e.target.value; renderView(); };
+$('#pipe').onchange = e => { state.pipe = e.target.value; };
+$('#auto').onchange = e => { state.auto = e.target.checked; };
+$('#speak').onchange = e => { state.speak = e.target.checked; };
+function voice(cmd){
+  const p = state.scanned && byId[state.scanned];
+  if (cmd === 'basket') { state.tab = 'basket'; log('voice: cheapest basket'); return renderPanel(); }
+  if (!p || !p.known) { state.lastHint = 'Scan a product first.'; return renderView(); }
+  if (cmd === 'compare') { state.tab = 'compare'; log('voice: compare prices'); renderPanel(); }
+  if (cmd === 'healthier') {
+    const g = groupOf(p).filter(q => health(q) != null).sort((a, b) => health(b) - health(a));
+    log('voice: healthier option?');
+    if (!g.length) { state.lastHint = 'No health data for this shelf.'; return renderView(); }
+    const top = g[0];
+    state.lastHint = top === p ? `This is already the healthiest on the shelf (${health(p)}/100).` : `Healthier: ${top.brand} ${top.name}, ${health(top)} vs ${health(p)}. Tap it on the floor map to look.`;
+    state.lastScan = null; state.tab = 'alts'; renderAll();
+  }
+}
+
+// Open in a working state: looking at the milk shelf, already scanned.
+state.looking = 'm1'; state.scanned = 'm1'; state.lastScan = {id:'m1', kind:'ok', ms:214, cached:true};
+state.basket = {b2:1, e1:1};
+log('214 ms  ' + byId.m1.ean + '  Meadow Farm Fresh Milk (example scan)');
+renderAll();
+})();
+</script>
