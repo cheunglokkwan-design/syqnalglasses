@@ -179,6 +179,7 @@ body.debug #debug{display:block}
 <div id="start"><div class="card">
   <h1>Syqnal Shopper</h1>
   <p>Point your camera at a product, or hold one up, and tap Check. You get one line: buy it, or what's better.</p>
+  <p style="font-size:13px;opacity:.75">No vision server set: the phone scans barcodes live on its own. Add your server under Settings for full photo recognition.</p>
   <button class="go" id="goBtn">Start camera</button>
   <button class="alt" id="goPhoto">Use a photo instead</button>
   <p id="startErr" style="color:var(--bad)"></p>
@@ -212,7 +213,7 @@ async function api(path, body){
 async function ping(){
   const el = $('status');
   try{const h = await api('/health'); el.className = 'pill glass ok'; el.lastElementChild.textContent = h.here_store || 'Connected'; S.health = h}
-  catch(_){el.className = 'pill glass off'; el.lastElementChild.textContent = S.server ? 'Server offline' : 'Set server'}
+  catch(_){el.className = 'pill glass ' + (S.server ? 'off' : 'ok'); el.lastElementChild.textContent = S.server ? 'Server offline' : 'On-device: barcodes'}
 }
 
 /* ---------- camera ---------- */
@@ -235,11 +236,90 @@ function grab(){
   return canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
 }
 
+/* ---------- on-device mode: live barcode scanning with no vision server ----------
+   Used when no server address is set. Reads EAN/UPC barcodes on the phone (BarcodeDetector,
+   or ZXing compiled to WebAssembly where the browser has none, e.g. iPhone) and gives the same
+   verdict as vision/aislelens_vision/verdict.py from the real 20-product catalogue. */
+const LOCAL_CATALOG = [{"sku":"RP-01","title":"Nestlé Milo Activ-Go","size":"1 kg","cat":"malted drinks","price":23.2,"barcode":"9556001004543","allergens":["Malt Barley","gluten","milk"],"sugars":40.7,"others":[{"store":"Lotus's","price":18.49,"promo":true}]},{"sku":"RP-02","title":"Maggi Kari instant noodles 5-pack","size":"5 x 79 g","cat":"instant noodles","price":5.79,"barcode":"9556001128836","allergens":["gluten","soybeans"],"sugars":2.4,"others":[{"store":"Lotus's","price":4.95,"promo":false}]},{"sku":"RP-03","title":"Dutch Lady Pure Farm full cream milk","size":"1 L","cat":"milk","price":7.69,"barcode":"9556166058191","allergens":["milk"],"sugars":5,"others":[{"store":"Lotus's","price":7.65,"promo":true}]},{"sku":"RP-04","title":"Gardenia Original Classic white bread","size":"400 g","cat":"bread","price":4.3,"barcode":"9556231110045","allergens":["gluten","milk","soybeans"],"sugars":null,"others":[{"store":"Lotus's","price":4.3,"promo":false}]},{"sku":"RP-05","title":"Nescafé Classic coffee jar","size":"200 g","cat":"coffee","price":34.9,"barcode":"","allergens":[],"sugars":null,"others":[{"store":"Lotus's","price":28.5,"promo":false}]},{"sku":"RP-06","title":"Julie's Peanut Butter Sandwich","size":"","cat":"biscuits","price":8.99,"barcode":"9556121027156","allergens":["gluten","milk","peanuts"],"sugars":6,"others":[{"store":"Lotus's","price":8.29,"promo":true}]},{"sku":"RP-07","title":"Mamee Monster snack multipack","size":"","cat":"snacks","price":5.2,"barcode":"9555022309194","allergens":["gluten"],"sugars":62,"others":[{"store":"Lotus's","price":3.75,"promo":true}]},{"sku":"RP-08","title":"Yeo's Soy bean drink","size":"1 L","cat":"soy and plant drinks","price":3.5,"barcode":"9556156040007","allergens":["soy","soybeans"],"sugars":5,"others":[{"store":"Lotus's","price":2.49,"promo":true}]},{"sku":"RP-09","title":"100PLUS Isotonic drink","size":"1.5 L","cat":"isotonic drinks","price":2.99,"barcode":"","allergens":[],"sugars":null,"others":[{"store":"Lotus's","price":3.59,"promo":true}]},{"sku":"RP-10","title":"Ayam Brand Sardines in tomato sauce","size":"425 g","cat":"canned fish","price":10.45,"barcode":"9556041601221","allergens":["fish"],"sugars":1.8,"others":[{"store":"Lotus's","price":10.65,"promo":false}]},{"sku":"RP-11","title":"Adabi Meat curry powder","size":"250 g","cat":"spices","price":6.9,"barcode":"","allergens":[],"sugars":null,"others":[{"store":"Lotus's","price":5.55,"promo":true}]},{"sku":"RP-12","title":"Hup Seng Special Cream Crackers","size":"428 g","cat":"biscuits","price":4.9,"barcode":"","allergens":["gluten"],"sugars":null,"others":[{"store":"Lotus's","price":4.49,"promo":false}]},{"sku":"RP-13","title":"Mister Potato Original crisps","size":"160 g","cat":"snacks","price":3.99,"barcode":"","allergens":[],"sugars":null,"others":[{"store":"Lotus's","price":3.99,"promo":true}]},{"sku":"RP-14","title":"Nestlé Kit Kat 4-finger","size":"","cat":"chocolate","price":3.6,"barcode":"","allergens":["gluten","milk","soy"],"sugars":null,"others":[]},{"sku":"RP-15","title":"Farm Fresh Full cream milk","size":"1 L","cat":"milk","price":6.9,"barcode":"","allergens":["milk"],"sugars":null,"others":[{"store":"Lotus's","price":5.49,"promo":true}]},{"sku":"RP-16","title":"Nestlé Koko Krunch cereal","size":"330 g","cat":"cereal","price":12.9,"barcode":"","allergens":["gluten","milk"],"sugars":null,"others":[{"store":"Lotus's","price":10.29,"promo":true}]},{"sku":"RP-17","title":"Quaker Instant Oatmeal","size":"800 g","cat":"cereal","price":8.99,"barcode":"9556174815878","allergens":["gluten"],"sugars":1.1,"others":[{"store":"Lotus's","price":10.65,"promo":false}]},{"sku":"RP-18","title":"Lee Kum Kee Premium Oyster Sauce","size":"510 g","cat":"sauces","price":17.99,"barcode":"78895129052","allergens":["gluten","molluscs"],"sugars":null,"others":[{"store":"Lotus's","price":16.45,"promo":false}]},{"sku":"RP-19","title":"Knife Blended cooking oil","size":"2 kg","cat":"cooking oil","price":15.9,"barcode":"","allergens":[],"sugars":null,"others":[{"store":"Lotus's","price":15.45,"promo":false}]},{"sku":"RP-20","title":"Vitagen Cultured milk drink 5-pack","size":"5 x 125 ml","cat":"cultured milk","price":5.3,"barcode":"9557305000118","allergens":["milk"],"sugars":6.3,"others":[{"store":"Lotus's","price":5.59,"promo":false}]}];
+const HIGH_SUGAR_G = 22.5;
+const byBarcode = Object.fromEntries(LOCAL_CATALOG.filter(p => p.barcode).map(p => [p.barcode, p]));
+let barcodeReader = null;
+async function getBarcodeReader(){
+  if (barcodeReader) return barcodeReader;
+  if ('BarcodeDetector' in window){
+    try{
+      const fmts = (await BarcodeDetector.getSupportedFormats()).filter(f => ['ean_13', 'ean_8', 'upc_a', 'upc_e'].includes(f));
+      if (fmts.length){const d = new BarcodeDetector({formats: fmts}); return barcodeReader = async src => (await d.detect(src))[0]?.rawValue || null}
+    }catch(_){}
+  }
+  await new Promise((ok, bad) => {const s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/zxing-wasm@2.2.4/dist/iife/reader/index.js'; s.onload = ok; s.onerror = bad; document.head.append(s)});
+  const c = document.createElement('canvas');
+  return barcodeReader = async src => {
+    const w = src.videoWidth || src.naturalWidth || src.width, h = src.videoHeight || src.naturalHeight || src.height;
+    const s = Math.min(1, 1280 / Math.max(w, h)); c.width = Math.round(w * s); c.height = Math.round(h * s);
+    const ctx = c.getContext('2d', {willReadFrequently: true}); ctx.drawImage(src, 0, 0, c.width, c.height);
+    const r = await ZXingWASM.readBarcodes(ctx.getImageData(0, 0, c.width, c.height), {formats: ['EAN-13', 'EAN-8', 'UPC-A', 'UPC-E'], tryHarder: true, maxNumberOfSymbols: 1});
+    return r[0]?.text || null;
+  };
+}
+function localVerdict(p, here){
+  const others = p.others.map(o => ({...o, price_myr: o.price, all_in_myr: o.price, kind: 'store'})).sort((a, b) => a.all_in_myr - b.all_in_myr);
+  const cheapest = others[0] || null, saving = cheapest ? +(here - cheapest.all_in_myr).toFixed(2) : 0;
+  const norm = a => (a = a.toLowerCase()) === 'soybeans' ? 'soy' : a;
+  const mine = new Set(S.allergies.map(norm)), alerts = [], lines = [];
+  const hit = [...new Set(p.allergens.map(norm))].filter(a => mine.has(a)).sort();
+  if (hit.length) alerts.push('Contains ' + hit.join(', '));
+  if (p.sugars != null && p.sugars >= HIGH_SUGAR_G) lines.push('High sugar: ' + p.sugars + ' g per 100 g');
+  const priceLine = cheapest && saving >= .1 ? fmt(saving) + ' cheaper at ' + cheapest.store + (cheapest.promo ? ' (promo)' : '')
+    : cheapest && saving > 0 ? 'Good buy: within ' + fmt(saving) + ' of ' + cheapest.store
+    : cheapest ? 'Good buy: cheapest nearby' : 'No other store price yet';
+  if (alerts.length) lines.unshift(priceLine);
+  lines.unshift(p.title + (p.size ? ' ' + p.size : '') + ': ' + fmt(here) + ' (Jaya Grocer online)');
+  return {headline: alerts[0] || priceLine, lines, alerts, compare: {here_myr: here, others, cheapest, saving_myr: saving}};
+}
+async function localCheck(src, live){
+  const t0 = performance.now(), read = await getBarcodeReader();
+  const code = await read(src);
+  if (!code){
+    if (!live) showAdvice('ask', 'Show me the barcode', 'Without a vision server the phone reads barcodes only', null);
+    return null;
+  }
+  const p = byBarcode[code.replace(/^0+/, '')];
+  const res = {mode: 'on-device', detections: 0, timings_ms: {barcode: Math.round(performance.now() - t0)}, barcode: code};
+  if (!p){
+    res.item = {status: 'unknown_barcode'}; S.last = res; drawDebug(res);
+    showAdvice('ask', 'Not in our 20 products yet', 'Barcode ' + code, null); say('I don’t know this product yet');
+    return res;
+  }
+  res.item = {sku: p.sku, title: p.title, size: p.size, price_myr: p.price, price_source: 'Jaya Grocer online', method: 'barcode', confidence: 1};
+  res.verdict = localVerdict(p, p.price);
+  res.alternatives = LOCAL_CATALOG.filter(o => o.cat === p.cat && o.sku !== p.sku).map(o => ({sku: o.sku, title: o.title, size: o.size, price_myr: o.price, sugars_g: o.sugars})).sort((a, b) => a.price_myr - b.price_myr);
+  render(res);
+  return res;
+}
+// live: while the camera runs with no server, look for a barcode a few times a second
+let liveBusy = false, lastCode = '', lastCodeAt = 0;
+setInterval(async () => {
+  if (S.server || liveBusy || S.busy || S.usingPhoto || !video.videoWidth || document.querySelector('.sheet.open')) return;
+  liveBusy = true;
+  try{
+    const read = await getBarcodeReader(), code = await read(video);
+    if (code && (code !== lastCode || Date.now() - lastCodeAt > 10000)){lastCode = code; lastCodeAt = Date.now(); $('ring').classList.add('busy'); await localCheck(video, true)}
+  }catch(_){}
+  finally{liveBusy = false; $('ring').classList.remove('busy')}
+}, 350);
+
 /* ---------- check a product ---------- */
 async function check(){
   if (S.busy) return;
   const rgb = grab(); if (!rgb){toast('Camera not ready'); return}
   S.busy = true; S.lastScan = Date.now(); $('ring').classList.add('busy'); hideChoices();
+  if (!S.server){
+    try{await localCheck(S.usingPhoto ? $('photo') : video, false)}
+    catch(_){showAdvice('ask', 'Barcode reader didn’t load', 'Check the internet connection and try again', null)}
+    finally{S.busy = false; $('ring').classList.remove('busy')}
+    return;
+  }
   try{
     const res = await api('/analyze', {rgb, profile: {allergies: S.allergies}, basket_total: cartTotal()});
     render(res);

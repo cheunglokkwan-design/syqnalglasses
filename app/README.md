@@ -9,6 +9,10 @@ A one-page web app: point the phone camera at a product, or hold one up, and tap
 
 No build step: `index.html` is the whole app.
 
+**On-device mode (no server):** with no vision server address set, the phone scans barcodes live by itself (BarcodeDetector, or ZXing in WebAssembly on iPhone) and gives the verdict from the 20 real products. Point the camera at a barcode and the answer appears without tapping. Set a server address under Settings to use the full vision model instead.
+
+**Open it on a phone now:** https://raw.githack.com/cheunglokkwan-design/syqnalglasses/ccr-72063d0e-ea52ph/app/index.html (served straight from this public repo over HTTPS, so the camera works).
+
 ## Try it on the laptop
 
 ```bash
